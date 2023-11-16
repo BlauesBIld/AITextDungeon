@@ -1,46 +1,41 @@
 package zeljko.dejan.rpginventorymanager
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import zeljko.dejan.rpginventorymanager.ui.theme.RPGInventoryManagerTheme
+import android.util.Log
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : ComponentActivity() {
+// Import other necessary classes
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var itemsRecyclerView: RecyclerView
+    private lateinit var adapter: ItemsAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            RPGInventoryManagerTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
+        setContentView(R.layout.activity_main)
+
+        itemsRecyclerView = findViewById(R.id.itemsRecyclerView)
+        adapter = ItemsAdapter(mutableListOf(Item("ExampleItem", R.drawable.ic_pouch), Item("ExampleItem2", R.drawable.ic_pouch)))
+        itemsRecyclerView.adapter = adapter
+
+        val layoutManager = GridLayoutManager(this, 2)
+        itemsRecyclerView.layoutManager = layoutManager
+
+        val fabAddItem = findViewById<FloatingActionButton>(R.id.fabAddItem)
+        fabAddItem.setOnClickListener{startAddNewItemProcess()}
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    fun onSearchClicked(view: View) {}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RPGInventoryManagerTheme {
-        Greeting("Android")
+    fun onFilterClicked(view: View) {}
+
+    fun startAddNewItemProcess(){
+        Log.i("MainActivity", "Add new item process started")
+        val exampleItem = Item("ExampleItem", R.drawable.ic_pouch)
+        adapter.addItem(exampleItem)
     }
 }

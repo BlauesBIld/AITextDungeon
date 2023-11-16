@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RPGInventoryManager</string>
+    <string name="add_new_item">Add New Item</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="inventory">Inventory</string>
 </resources>
