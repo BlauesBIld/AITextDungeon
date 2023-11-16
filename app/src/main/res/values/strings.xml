@@ -4,4 +4,8 @@
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="inventory">Inventory</string>
+    <string name="nav_name">Name</string>
+    <string name="nav_icon">Icon</string>
+    <string name="nav_properties">Properties</string>
+    <string name="nav_category">Categories</string>
 </resources>
