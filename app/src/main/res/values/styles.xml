@@ -1,6 +1,5 @@
 <resources>
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Your theme customizations -->
     </style>
 
     <style name="BottomNavigationViewTextAppearance">
@@ -8,10 +7,22 @@
     </style>
 
     <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemTextColor">@color/white</item>
+        <item name="android:unselectedAlpha">0.6</item>
+        <item name="android:background">@color/secondaryColor</item>
         <item name="itemIconSize">0dp</item>
         <item name="itemTextAppearanceActive">@style/BottomNavigationViewTextAppearance</item>
         <item name="itemTextAppearanceInactive">@style/BottomNavigationViewTextAppearance</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">16dp</item>
+    </style>
+
+    <style name="CustomButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/primaryColor</item>
+        <item name="android:textColor">@color/neutralColor</item>
+    </style>
+
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="colorControlNormal">@color/white</item>
     </style>
 </resources>

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/secondaryColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,6 +12,7 @@
         tools:context=".MainActivity">
 
         <TextView
+            android:textColor="@color/primaryColor"
             android:id="@+id/headerTitle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -67,7 +69,7 @@
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="8dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/black" />
 
             <FrameLayout
                 android:layout_width="0dp"

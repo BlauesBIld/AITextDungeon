@@ -8,4 +8,7 @@
     <string name="nav_icon">Icon</string>
     <string name="nav_properties">Properties</string>
     <string name="nav_category">Categories</string>
+    <string name="next">Next</string>
+    <string name="enter_item_name_hint">Enter item name</string>
+    <string name="new_item">New Item</string>
 </resources>
