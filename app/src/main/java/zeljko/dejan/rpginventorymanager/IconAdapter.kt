@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 
 class IconAdapter(private val context: Context, private val icons: Array<Int>) : BaseAdapter() {
 
@@ -17,13 +18,8 @@ class IconAdapter(private val context: Context, private val icons: Array<Int>) :
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val imageView = convertView as ImageView? ?: ImageView(context)
         imageView.setImageResource(icons[position])
-        imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-        imageView.adjustViewBounds = true
-        imageView.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-
+        imageView.background = ContextCompat.getDrawable(context, R.drawable.icon_background)
+        imageView.setPadding(8, 8, 8, 8)
         return imageView
     }
 }

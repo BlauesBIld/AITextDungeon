@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import zeljko.dejan.rpginventorymanager.databinding.ActivityAddingProcessBinding
 
@@ -18,6 +19,19 @@ class AddingProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddingProcessBinding
     private var currentStepIndex = 0
     private var currentItem: Item? = null
+
+    private val icons = arrayOf(
+        R.drawable.item_ic_bow,
+        R.drawable.item_ic_bread,
+        R.drawable.item_ic_cape,
+        R.drawable.item_ic_key,
+        R.drawable.item_ic_potion,
+        R.drawable.item_ic_necklace,
+        R.drawable.item_ic_pouch,
+        R.drawable.item_ic_robe,
+        R.drawable.item_ic_staff,
+        R.drawable.item_ic_sword,
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +127,7 @@ class AddingProcessActivity : AppCompatActivity() {
     private fun setUpSetNameScreen(view: View) {
         val itemNameEditText = view.findViewById<EditText>(R.id.itemNameEditText)
 
-        if(currentItem?.name != "") {
+        if (currentItem?.name != "") {
             itemNameEditText.setText(currentItem?.name)
         }
 
@@ -134,15 +148,38 @@ class AddingProcessActivity : AppCompatActivity() {
                 currentItem?.name = itemNameEditText.text.toString()
                 goToNextStep()
             } else {
-                itemNameEditText.error = "Item name needs to be 3-30 characters long and contain only letters, numbers, and spaces."
+                itemNameEditText.error =
+                    "Item name needs to be 3-30 characters long and contain only letters, numbers, and spaces."
             }
         }
     }
 
     private fun setUpSelectIconScreen(view: View) {
+        val gridView = view.findViewById<GridView>(R.id.iconGridView)
+        val selectedIconImageView = view.findViewById<ImageView>(R.id.selectedIconImageView)
+
+        gridView.adapter = IconAdapter(this, icons)
+
+        if (currentItem?.icon != 0) {
+            gridView.setSelection(icons.indexOf(currentItem?.icon))
+            selectedIconImageView.setImageResource(currentItem?.icon!!)
+        } else {
+            gridView.setSelection(0)
+        }
+
+        gridView.setOnItemClickListener { parent, view, position, id ->
+            val selectedIcon = icons[position]
+            currentItem?.icon = selectedIcon
+            selectedIconImageView.setImageResource(selectedIcon)
+        }
+
         val nextButton = view.findViewById<Button>(R.id.nextButton)
         nextButton.setOnClickListener {
-            goToNextStep()
+            if(currentItem?.icon == 0) {
+
+            } else {
+                goToNextStep()
+            }
         }
     }
 
