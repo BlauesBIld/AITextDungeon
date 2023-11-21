@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.GridView
 import androidx.appcompat.app.AppCompatActivity
 import zeljko.dejan.rpginventorymanager.databinding.ActivityAddingProcessBinding
 
@@ -64,7 +65,7 @@ class AddingProcessActivity : AppCompatActivity() {
     }
 
     private fun showSetNameScreen() {
-        if(R.id.navigation_set_name != binding.navigationBar.selectedItemId) {
+        if (R.id.navigation_set_name != binding.navigationBar.selectedItemId) {
             updateNavigationBarSelection(R.id.navigation_set_name)
         }
         val itemNameView = switchToScreen(R.layout.new_item_set_name)
@@ -73,7 +74,7 @@ class AddingProcessActivity : AppCompatActivity() {
     }
 
     private fun showSelectIconScreen() {
-        if(R.id.navigation_select_icon != binding.navigationBar.selectedItemId) {
+        if (R.id.navigation_select_icon != binding.navigationBar.selectedItemId) {
             updateNavigationBarSelection(R.id.navigation_select_icon)
         }
         val iconView = switchToScreen(R.layout.new_item_select_icon)
@@ -82,7 +83,7 @@ class AddingProcessActivity : AppCompatActivity() {
     }
 
     private fun showSetPropertiesScreen() {
-        if(R.id.navigation_set_properties != binding.navigationBar.selectedItemId) {
+        if (R.id.navigation_set_properties != binding.navigationBar.selectedItemId) {
             updateNavigationBarSelection(R.id.navigation_set_properties)
         }
         switchToScreen(R.layout.new_item_set_properties)
@@ -90,14 +91,14 @@ class AddingProcessActivity : AppCompatActivity() {
     }
 
     private fun showAssignCategoryScreen() {
-        if(R.id.navigation_assign_category != binding.navigationBar.selectedItemId) {
+        if (R.id.navigation_assign_category != binding.navigationBar.selectedItemId) {
             updateNavigationBarSelection(R.id.navigation_assign_category)
         }
         switchToScreen(R.layout.new_item_assign_category)
         currentStepIndex = 3
     }
 
-    private fun switchToScreen(newScreen: Int) : android.view.View {
+    private fun switchToScreen(newScreen: Int): android.view.View {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(newScreen, binding.contentFrame, false)
         binding.contentFrame.removeAllViews()
