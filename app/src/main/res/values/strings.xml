@@ -11,4 +11,5 @@
     <string name="next">Next</string>
     <string name="enter_item_name_hint">Enter item name</string>
     <string name="new_item">New Item</string>
+    <string name="name">Name</string>
 </resources>

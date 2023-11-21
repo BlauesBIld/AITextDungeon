@@ -17,6 +17,7 @@ class AddingProcessActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddingProcessBinding
     private var currentStepIndex = 0
+    private var currentItem: Item? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +28,8 @@ class AddingProcessActivity : AppCompatActivity() {
         showSetNameScreen()
 
         disableNavigationItems(1)
+
+        currentItem = Item("", 0)
     }
 
     private fun disableNavigationItems(startingFrom: Int) {
@@ -109,6 +112,11 @@ class AddingProcessActivity : AppCompatActivity() {
 
     private fun setUpSetNameScreen(view: View) {
         val itemNameEditText = view.findViewById<EditText>(R.id.itemNameEditText)
+
+        if(currentItem?.name != "") {
+            itemNameEditText.setText(currentItem?.name)
+        }
+
         itemNameEditText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -122,7 +130,12 @@ class AddingProcessActivity : AppCompatActivity() {
 
         val nextButton = view.findViewById<Button>(R.id.nextButton)
         nextButton.setOnClickListener {
-            goToNextStep()
+            if (isValidItemName(itemNameEditText.text.toString())) {
+                currentItem?.name = itemNameEditText.text.toString()
+                goToNextStep()
+            } else {
+                itemNameEditText.error = "Item name needs to be 3-30 characters long and contain only letters, numbers, and spaces."
+            }
         }
     }
 
@@ -147,5 +160,11 @@ class AddingProcessActivity : AppCompatActivity() {
             }
             true
         }
+    }
+
+
+    private fun isValidItemName(name: String): Boolean {
+        val pattern = "^[A-Za-z0-9 ]{3,30}$"
+        return name.matches(pattern.toRegex())
     }
 }
