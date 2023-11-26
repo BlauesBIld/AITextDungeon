@@ -1,5 +1,6 @@
 <resources>
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:textColor">@color/primaryColor</item>
     </style>
 
     <style name="BottomNavigationViewTextAppearance">
@@ -18,11 +19,13 @@
     </style>
 
     <style name="CustomButton" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/primaryColor</item>
-        <item name="android:textColor">@color/neutralColor</item>
+        <item name="backgroundTint">@color/button_background_color</item>
+        <item name="android:textColor">@color/button_text_color</item>
     </style>
 
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
         <item name="colorControlNormal">@color/white</item>
     </style>
 </resources>
