@@ -66,6 +66,7 @@ class AddingProcessActivity : AppCompatActivity() {
 
     private fun setupNavigationBar() {
         binding.navigationBar.setOnItemSelectedListener { menuItem ->
+            saveCurrentStep()
             when (menuItem.itemId) {
                 R.id.navigation_set_name -> showSetNameScreen()
                 R.id.navigation_select_icon -> showSelectIconScreen()
@@ -230,16 +231,7 @@ class AddingProcessActivity : AppCompatActivity() {
 
         binding.navigationBar.selectedItemId = itemId
 
-        binding.navigationBar.setOnItemSelectedListener { menuItem ->
-            saveCurrentStep()
-            when (menuItem.itemId) {
-                R.id.navigation_set_name -> showSetNameScreen()
-                R.id.navigation_select_icon -> showSelectIconScreen()
-                R.id.navigation_set_properties -> showSetPropertiesScreen()
-                R.id.navigation_assign_category -> showAssignCategoryScreen()
-            }
-            true
-        }
+        setupNavigationBar()
     }
 
     private fun isValidItemName(name: String): Boolean {
