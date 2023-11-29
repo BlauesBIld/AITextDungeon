@@ -18,4 +18,6 @@
     <string name="property_header_value">Value</string>
     <string name="property_name_hint">Enter name</string>
     <string name="property_value_hint">Enter value</string>
+    <string name="enter_new_category_hint">Enter New Category Name</string>
+    <string name="create">Create</string>
 </resources>

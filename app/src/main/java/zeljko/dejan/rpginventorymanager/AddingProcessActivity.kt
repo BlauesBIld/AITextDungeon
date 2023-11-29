@@ -1,26 +1,26 @@
 package zeljko.dejan.rpginventorymanager
 
-import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
-import android.content.res.ColorStateList
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.marginEnd
 import zeljko.dejan.rpginventorymanager.databinding.ActivityAddingProcessBinding
 
 class AddingProcessActivity : AppCompatActivity() {
@@ -131,7 +131,8 @@ class AddingProcessActivity : AppCompatActivity() {
         if (R.id.navigation_assign_category != binding.navigationBar.selectedItemId) {
             updateNavigationBarSelection(R.id.navigation_assign_category)
         }
-        switchToScreen(R.layout.new_item_assign_category)
+        val categoriesView = switchToScreen(R.layout.new_item_assign_category)
+        setUpAssignCategoryScreen(categoriesView)
         currentStepIndex = 3
     }
 
@@ -226,17 +227,69 @@ class AddingProcessActivity : AppCompatActivity() {
         }
     }
 
+    private fun setUpAssignCategoryScreen(view: View) {
+        val categorySpinner: Spinner = view.findViewById(R.id.categorySpinner)
+        val newCategoryEditText: EditText = view.findViewById(R.id.newCategoryEditText)
+        val createButton: Button = view.findViewById(R.id.createButton)
+
+        val categoriesAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Item.allCategories.toList())
+        categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        categorySpinner.adapter = categoriesAdapter
+
+        categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedCategory = parent?.getItemAtPosition(position).toString()
+                if (selectedCategory == "+ new category") {
+                    newCategoryEditText.visibility = View.VISIBLE
+                } else {
+                    newCategoryEditText.visibility = View.GONE
+                    currentItem?.categories?.add(selectedCategory)
+                    createButton.isEnabled = true
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                newCategoryEditText.visibility = View.GONE
+            }
+        }
+
+        newCategoryEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val newCategoryName = s.toString().trim()
+                createButton.isEnabled = isValidCategoryName(newCategoryName)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        createButton.setOnClickListener {
+            val newCategoryName = newCategoryEditText.text.toString().trim()
+            if (isValidCategoryName(newCategoryName)) {
+                Item.allCategories.add(newCategoryName)
+                categoriesAdapter.notifyDataSetChanged()
+                currentItem?.categories?.add(newCategoryName)
+            }
+            saveItemAndFinishActivity()
+        }
+    }
+
+    private fun isValidCategoryName(name: String): Boolean {
+        val pattern = "^[A-Za-z0-9]{3,20}$"
+        return name.matches(pattern.toRegex())
+    }
+
+    private fun isValidItemName(name: String): Boolean {
+        val pattern = "^[A-Za-z0-9 ]{3,30}$"
+        return name.matches(pattern.toRegex())
+    }
+
     private fun updateNavigationBarSelection(itemId: Int) {
         binding.navigationBar.setOnItemSelectedListener(null)
 
         binding.navigationBar.selectedItemId = itemId
 
         setupNavigationBar()
-    }
-
-    private fun isValidItemName(name: String): Boolean {
-        val pattern = "^[A-Za-z0-9 ]{3,30}$"
-        return name.matches(pattern.toRegex())
     }
 
     private fun addPropertyRow(name: String = "", value: String = "") {
@@ -289,5 +342,10 @@ class AddingProcessActivity : AppCompatActivity() {
         if (currentSelectedIcon != 0) {
             currentItem?.icon = currentSelectedIcon
         }
+    }
+
+    private fun saveItemAndFinishActivity() {
+        ItemRepository.addItem(currentItem!!)
+        finish()
     }
 }

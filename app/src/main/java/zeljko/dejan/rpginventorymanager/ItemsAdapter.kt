@@ -6,9 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemsAdapter(private val items: MutableList<Item>): RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
+class ItemsAdapter(private val items: MutableList<Item>) :
+    RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
+    class ItemDiffCallback(private val oldList: List<Item>, private val newList: List<Item>) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].name == newList[newItemPosition].name
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
         return ItemViewHolder(view)
@@ -36,6 +54,17 @@ class ItemsAdapter(private val items: MutableList<Item>): RecyclerView.Adapter<I
     fun addItem(item: Item) {
         items.add(item)
         notifyItemInserted(items.size - 1)
-        Log.i("ItemsAdapter", "Item added: ${item.name}")
+    }
+
+    fun updateItems(newItems: MutableList<Item>) {
+        val diffCallback = ItemDiffCallback(items, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        items.clear()
+        items.addAll(newItems)
+        for (item in items) {
+            Log.d("Item", item.name)
+        }
+        diffResult.dispatchUpdatesTo(this)
     }
 }
