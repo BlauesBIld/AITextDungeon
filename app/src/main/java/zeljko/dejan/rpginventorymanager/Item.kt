@@ -2,8 +2,10 @@ package zeljko.dejan.rpginventorymanager
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 
 @Entity(tableName = "items")
+@TypeConverters(Converters::class)
 data class Item(
     @PrimaryKey
     var name: String,
