@@ -4,12 +4,6 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8)) // Use Java 8
-    }
-}
-
 android {
     namespace = "zeljko.dejan.rpginventorymanager"
     compileSdk = 34
@@ -17,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "zeljko.dejan.rpginventorymanager"
         minSdk = 31
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -36,10 +30,6 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -47,7 +37,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
