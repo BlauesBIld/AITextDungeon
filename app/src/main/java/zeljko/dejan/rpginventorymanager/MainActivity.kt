@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var itemsRecyclerView: RecyclerView
@@ -19,21 +21,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         itemsRecyclerView = findViewById(R.id.itemsRecyclerView)
-
-        ItemRepository.addItem(Item("ExampleItem1", R.drawable.item_ic_pouch))
-        ItemRepository.addItem(Item("ExampleItem2", R.drawable.item_ic_pouch))
-        Log.d("Item", ItemRepository.getItems().size.toString())
-        adapter = ItemsAdapter(ItemRepository.getItems())
-        itemsRecyclerView.adapter = adapter
-
         val layoutManager = GridLayoutManager(this, 2)
         itemsRecyclerView.layoutManager = layoutManager
 
         val fabAddItem = findViewById<FloatingActionButton>(R.id.fabAddItem)
-        fabAddItem.setOnClickListener{
+        fabAddItem.setOnClickListener {
             startAddNewItemProcess()
         }
+
+        initializeItems()
     }
+
 
     fun onSearchClicked(view: View) {}
 
@@ -46,6 +44,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        adapter.updateItems(ItemRepository.getItems())
+        initializeItems()
+    }
+
+    private fun initializeItems() {
+        lifecycleScope.launch {
+            val itemDao = Inventory.database.itemDao()
+
+            // Check and Insert items only if needed
+            if (itemDao.getAllItems().isEmpty()) {
+                itemDao.insertItem(Item("Example Item1", R.drawable.item_ic_pouch))
+                itemDao.insertItem(Item("Example Item2", R.drawable.item_ic_pouch))
+            }
+
+            val items = itemDao.getAllItems()
+            adapter = ItemsAdapter(items.toMutableList())
+            itemsRecyclerView.adapter = adapter
+        }
     }
 }

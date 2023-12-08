@@ -5,5 +5,5 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Item::class], version = 1)
 abstract class InventoryDatabase : RoomDatabase() {
-    abstract val dao: ItemDao
+    abstract fun itemDao(): ItemDao
 }

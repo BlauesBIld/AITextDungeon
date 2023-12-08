@@ -18,6 +18,22 @@ data class Item(
     companion object {
         val allCategories: MutableList<String> = mutableListOf()
 
+
+        val icons = arrayOf(
+            R.drawable.item_ic_bow,
+            R.drawable.item_ic_bread,
+            R.drawable.item_ic_cape,
+            R.drawable.item_ic_key,
+            R.drawable.item_ic_potion,
+            R.drawable.item_ic_necklace,
+            R.drawable.item_ic_pouch,
+            R.drawable.item_ic_robe,
+            R.drawable.item_ic_staff,
+            R.drawable.item_ic_sword,
+            R.drawable.item_ic_scroll,
+            R.drawable.item_ic_armor
+        )
+
         init {
             addDefaultCategories()
         }

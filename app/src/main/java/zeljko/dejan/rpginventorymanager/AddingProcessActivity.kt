@@ -21,6 +21,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.*
 import zeljko.dejan.rpginventorymanager.databinding.ActivityAddingProcessBinding
 
 class AddingProcessActivity : AppCompatActivity() {
@@ -28,21 +30,6 @@ class AddingProcessActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddingProcessBinding
     private var currentStepIndex = 0
     private var currentItem: Item? = null
-
-    private val icons = arrayOf(
-        R.drawable.item_ic_bow,
-        R.drawable.item_ic_bread,
-        R.drawable.item_ic_cape,
-        R.drawable.item_ic_key,
-        R.drawable.item_ic_potion,
-        R.drawable.item_ic_necklace,
-        R.drawable.item_ic_pouch,
-        R.drawable.item_ic_robe,
-        R.drawable.item_ic_staff,
-        R.drawable.item_ic_sword,
-        R.drawable.item_ic_scroll,
-        R.drawable.item_ic_armor
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,10 +169,10 @@ class AddingProcessActivity : AppCompatActivity() {
         val nextButton = view.findViewById<Button>(R.id.nextButton)
         nextButton.isEnabled = false
 
-        gridView.adapter = IconAdapter(this, icons)
+        gridView.adapter = IconAdapter(this, Item.icons)
 
         if (currentItem?.icon != 0) {
-            gridView.setSelection(icons.indexOf(currentItem?.icon))
+            gridView.setSelection(Item.icons.indexOf(currentItem?.icon))
             selectedIconImageView.setImageResource(currentItem?.icon!!)
             nextButton.isEnabled = true
         } else {
@@ -193,7 +180,7 @@ class AddingProcessActivity : AppCompatActivity() {
         }
 
         gridView.setOnItemClickListener { parent, view, position, id ->
-            val selectedIcon = icons[position]
+            val selectedIcon = Item.icons[position]
             currentItem?.icon = selectedIcon
             selectedIconImageView.setImageResource(selectedIcon)
             nextButton.isEnabled = true
@@ -345,7 +332,11 @@ class AddingProcessActivity : AppCompatActivity() {
     }
 
     private fun saveItemAndFinishActivity() {
-        ItemRepository.addItem(currentItem!!)
-        finish()
+        currentItem?.let { item ->
+            lifecycleScope.launch {
+                Inventory.database.itemDao().insertItem(item)
+                finish()
+            }
+        }
     }
 }
