@@ -10,6 +10,7 @@ class Inventory : Application() {
                 InventoryDatabase::class.java,
                 "inventory.db")
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build()
         }
 

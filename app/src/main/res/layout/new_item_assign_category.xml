@@ -18,10 +18,21 @@
     <Spinner
         android:id="@+id/categorySpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="8dp"
+        android:spinnerMode="dropdown"
+        style="@style/CustomSpinnerStyle" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <EditText
         android:id="@+id/newCategoryEditText"
+        style="@style/EditTextStyle"
+        android:background="@drawable/edit_text_underline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_new_category_hint"
@@ -30,13 +41,18 @@
         android:visibility="gone"
         android:padding="16dp"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
     <Button
-        android:id="@+id/createButton"
+        android:id="@+id/nextButton"
         style="@style/CustomButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:padding="16dp"
-        android:text="@string/create"
+        android:text="@string/next"
         android:enabled="false" />
 </LinearLayout>

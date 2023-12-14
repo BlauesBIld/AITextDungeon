@@ -42,7 +42,7 @@
         android:hint="@string/enter_item_name_hint"
         android:inputType="text"
         android:imeOptions="actionDone"
-        android:maxLength="30"
+        android:maxLength="40"
         android:padding="16dp"/>
 
 

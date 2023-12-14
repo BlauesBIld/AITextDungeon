@@ -134,6 +134,9 @@ class AddingProcessActivity : AppCompatActivity() {
 
     private fun setUpSetNameScreen(view: View) {
         val itemNameEditText = view.findViewById<EditText>(R.id.itemNameEditText)
+        val nextButton = view.findViewById<Button>(R.id.nextButton)
+
+        nextButton.isEnabled = false
 
         if (currentItem?.name != "") {
             itemNameEditText.setText(currentItem?.name)
@@ -150,7 +153,15 @@ class AddingProcessActivity : AppCompatActivity() {
             }
         }
 
-        val nextButton = view.findViewById<Button>(R.id.nextButton)
+        itemNameEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val nextButton = view.findViewById<Button>(R.id.nextButton)
+                nextButton.isEnabled = isValidItemName(s.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
         nextButton.setOnClickListener {
             if (isValidItemName(itemNameEditText.text.toString())) {
                 currentItem?.name = itemNameEditText.text.toString()
@@ -194,7 +205,7 @@ class AddingProcessActivity : AppCompatActivity() {
     private fun setUpPropertiesScreen(view: View) {
         val propertiesLayout: LinearLayout = view.findViewById(R.id.propertiesLayout)
 
-        if(currentItem?.properties?.size == 0) {
+        if (currentItem?.properties?.size == 0) {
             addPropertyRow()
         }
 
@@ -217,21 +228,37 @@ class AddingProcessActivity : AppCompatActivity() {
     private fun setUpAssignCategoryScreen(view: View) {
         val categorySpinner: Spinner = view.findViewById(R.id.categorySpinner)
         val newCategoryEditText: EditText = view.findViewById(R.id.newCategoryEditText)
-        val createButton: Button = view.findViewById(R.id.createButton)
+        val nextButton: Button = view.findViewById(R.id.nextButton)
 
-        val categoriesAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Item.allCategories.toList())
+        val categoriesList = mutableListOf<String>()
+
+        categoriesList.add("New Category")
+        categoriesList.addAll(Item.defaultCategories)
+        Inventory.database.itemDao().getAllCategories().forEach { category ->
+            if (category !in categoriesList && category != "")
+                categoriesList.add(category)
+        }
+
+        val categoriesAdapter =
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoriesList)
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         categorySpinner.adapter = categoriesAdapter
 
         categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val selectedCategory = parent?.getItemAtPosition(position).toString()
-                if (selectedCategory == "+ new category") {
+                if (selectedCategory == "New Category") {
                     newCategoryEditText.visibility = View.VISIBLE
+                    nextButton.isEnabled = false // Disable the next button initially
                 } else {
                     newCategoryEditText.visibility = View.GONE
-                    currentItem?.categories?.add(selectedCategory)
-                    createButton.isEnabled = true
+                    currentItem?.category = selectedCategory
+                    nextButton.isEnabled = true
                 }
             }
 
@@ -240,29 +267,38 @@ class AddingProcessActivity : AppCompatActivity() {
             }
         }
 
+        // Add logic to handle the creation of a new category
         newCategoryEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                val newCategoryName = s.toString().trim()
-                createButton.isEnabled = isValidCategoryName(newCategoryName)
+                // Enable the create button only if the new category name is valid
+                nextButton.isEnabled = isValidCategoryName(s.toString().trim())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        createButton.setOnClickListener {
-            val newCategoryName = newCategoryEditText.text.toString().trim()
-            if (isValidCategoryName(newCategoryName)) {
-                Item.allCategories.add(newCategoryName)
-                categoriesAdapter.notifyDataSetChanged()
-                currentItem?.categories?.add(newCategoryName)
+        nextButton.setOnClickListener {
+            if (categorySpinner.selectedItem.toString() == "New Category") {
+                val newCategoryName = newCategoryEditText.text.toString().trim()
+                if (isValidCategoryName(newCategoryName)) {
+                    Item.allCategories.add(newCategoryName)
+                    categoriesAdapter.notifyDataSetChanged()
+                    currentItem?.category = newCategoryName
+                    saveItemAndFinishActivity()
+                } else {
+                    newCategoryEditText.error =
+                        "Category name must be 3-30 characters long and should be one word."
+                }
+            } else {
+                currentItem?.category = categorySpinner.selectedItem.toString()
+                saveItemAndFinishActivity()
             }
-            saveItemAndFinishActivity()
         }
     }
 
     private fun isValidCategoryName(name: String): Boolean {
-        val pattern = "^[A-Za-z0-9]{3,20}$"
+        val pattern = "^[A-Za-z0-9]{3,30}$"
         return name.matches(pattern.toRegex())
     }
 
@@ -282,7 +318,8 @@ class AddingProcessActivity : AppCompatActivity() {
     private fun addPropertyRow(name: String = "", value: String = "") {
         val propertiesLayout: LinearLayout = findViewById(R.id.propertiesLayout)
 
-        val rowView: View = LayoutInflater.from(this).inflate(R.layout.property_row_layout, propertiesLayout, false)
+        val rowView: View =
+            LayoutInflater.from(this).inflate(R.layout.property_row_layout, propertiesLayout, false)
         val propertyNameEditText: EditText = rowView.findViewById(R.id.propertyName)
         val propertyValueEditText: EditText = rowView.findViewById(R.id.propertyValue)
 

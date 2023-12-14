@@ -13,10 +13,12 @@ data class Item(
 ) {
     var quantity: Int = 0
     var properties: MutableMap<String, String> = mutableMapOf()
-    var categories: MutableSet<String> = mutableSetOf()
+    var category: String = ""
 
     companion object {
         val allCategories: MutableList<String> = mutableListOf()
+        val defaultCategories: List<String>
+            get() = listOf("Armor", "Weapon", "Potion", "Food")
 
 
         val icons = arrayOf(
