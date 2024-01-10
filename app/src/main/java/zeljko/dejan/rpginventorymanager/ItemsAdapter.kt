@@ -1,5 +1,6 @@
 package zeljko.dejan.rpginventorymanager
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemsAdapter(private val items: MutableList<Item>) :
-    RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
+class ItemsAdapter(
+    private val items: MutableList<Item>,
+    private val onItemClick: (Item) -> Unit // Callback for item click
+) : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
     class ItemDiffCallback(private val oldList: List<Item>, private val newList: List<Item>) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int = oldList.size
@@ -29,6 +32,7 @@ class ItemsAdapter(private val items: MutableList<Item>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
+
         return ItemViewHolder(view)
     }
 
@@ -42,10 +46,17 @@ class ItemsAdapter(private val items: MutableList<Item>) :
         }
     }
 
-    class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameTextView: TextView = view.findViewById(R.id.item_name)
         val iconImageView: ImageView = view.findViewById(R.id.item_icon)
+
+        init {
+            itemView.setOnClickListener {
+                onItemClick(items[bindingAdapterPosition]) // Use bindingAdapterPosition
+            }
+        }
     }
+
 
     override fun getItemCount(): Int {
         return items.size;

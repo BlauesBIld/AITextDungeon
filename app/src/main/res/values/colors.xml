@@ -9,7 +9,7 @@
     <color name="secondaryColor">#1B1B1B</color>
     <color name="secondaryLightColor">#303030</color>
     <color name="primaryTextColor">#000000</color>
-    <color name="secondaryTextColor">#EAEAEA</color>
+    <color name="secondaryTextColor">#DDDDDD</color>
     <color name="neutralColor">#FFFFFF</color>
     <color name="neutralColorDisabled">#8E8E8E</color>
     <color name="cyan">#00FFFF</color>

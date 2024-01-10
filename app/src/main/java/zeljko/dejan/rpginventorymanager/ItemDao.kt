@@ -1,8 +1,10 @@
 package zeljko.dejan.rpginventorymanager
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface ItemDao {
@@ -15,4 +17,13 @@ interface ItemDao {
 
     @Insert
     fun insertItem(item: Item): Long
+
+    @Query("SELECT * FROM items WHERE name = :itemName")
+    fun getItemByName(itemName: String): Item
+
+    @Query("DELETE FROM items WHERE name = :itemName")
+    fun deleteItemByName(itemName: String)
+
+    @Update
+    fun updateItem(currentItem: Item)
 }

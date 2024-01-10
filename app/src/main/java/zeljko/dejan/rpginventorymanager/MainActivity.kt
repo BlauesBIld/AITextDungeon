@@ -58,7 +58,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             val items = itemDao.getAllItems()
-            adapter = ItemsAdapter(items.toMutableList())
+            adapter = ItemsAdapter(items.toMutableList()) { item ->
+                val intent = Intent(this@MainActivity, ItemDetailActivity::class.java)
+                intent.putExtra("ITEM_NAME", item.name)
+                startActivity(intent)
+            }
+
             itemsRecyclerView.adapter = adapter
         }
     }

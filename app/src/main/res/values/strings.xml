@@ -20,4 +20,5 @@
     <string name="property_value_hint">Enter value</string>
     <string name="enter_new_category_hint">Enter New Category Name</string>
     <string name="create">Create</string>
+    <string name="item_icon">item icon</string>
 </resources>
