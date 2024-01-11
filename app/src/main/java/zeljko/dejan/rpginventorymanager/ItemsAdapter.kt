@@ -1,6 +1,5 @@
 package zeljko.dejan.rpginventorymanager
 
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ItemsAdapter(
     private val items: MutableList<Item>,
-    private val onItemClick: (Item) -> Unit // Callback for item click
+    private val onItemClick: (Item) -> Unit
 ) : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
-    class ItemDiffCallback(private val oldList: List<Item>, private val newList: List<Item>) : DiffUtil.Callback() {
+    class ItemDiffCallback(private val oldList: List<Item>, private val newList: List<Item>) :
+        DiffUtil.Callback() {
 
         override fun getOldListSize(): Int = oldList.size
 
@@ -52,7 +52,7 @@ class ItemsAdapter(
 
         init {
             itemView.setOnClickListener {
-                onItemClick(items[bindingAdapterPosition]) // Use bindingAdapterPosition
+                onItemClick(items[bindingAdapterPosition])
             }
         }
     }

@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/secondaryColor"
@@ -14,6 +13,15 @@
         android:text="@string/new_item"
         android:textColor="@color/primaryColor"
         android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/categoryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center"
+        android:text="@string/assign_category"
+        android:textColor="@color/primaryColor"
+        android:textSize="20sp" />
 
     <Spinner
         android:id="@+id/categorySpinner"
@@ -39,7 +47,7 @@
         android:inputType="text"
         android:maxLength="20"
         android:visibility="gone"
-        android:padding="16dp"/>
+        android:padding="16dp" />
 
     <View
         android:layout_width="match_parent"

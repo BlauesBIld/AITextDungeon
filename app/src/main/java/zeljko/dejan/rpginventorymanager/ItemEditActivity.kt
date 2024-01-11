@@ -3,7 +3,15 @@ package zeljko.dejan.rpginventorymanager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +21,7 @@ import kotlinx.coroutines.withContext
 
 class ItemEditActivity : AppCompatActivity() {
 
+    private lateinit var itemIconImageView: ImageView
     private lateinit var itemNameTextView: TextView
     private lateinit var quantityTextView: TextView
     private lateinit var categorySpinner: Spinner
@@ -27,6 +36,7 @@ class ItemEditActivity : AppCompatActivity() {
         quantityTextView = findViewById(R.id.quantityTextView)
         categorySpinner = findViewById(R.id.categorySpinner)
         propertiesLayout = findViewById(R.id.propertiesLayout)
+        itemIconImageView = findViewById(R.id.itemIconImageView)
 
         val itemName = intent.getStringExtra("ITEM_NAME")
         if (itemName != null) {
@@ -54,6 +64,7 @@ class ItemEditActivity : AppCompatActivity() {
                 quantityTextView.text = item.quantity.toString()
                 setUpCategorySpinner(item.category)
                 setUpPropertiesLayout(item.properties)
+                itemIconImageView.setImageResource(item.icon)
             }
         }
     }

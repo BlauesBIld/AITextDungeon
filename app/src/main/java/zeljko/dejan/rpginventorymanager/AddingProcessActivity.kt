@@ -1,8 +1,6 @@
 package zeljko.dejan.rpginventorymanager
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,7 +20,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import zeljko.dejan.rpginventorymanager.databinding.ActivityAddingProcessBinding
 
 class AddingProcessActivity : AppCompatActivity() {
@@ -254,7 +252,7 @@ class AddingProcessActivity : AppCompatActivity() {
                 val selectedCategory = parent?.getItemAtPosition(position).toString()
                 if (selectedCategory == "New Category") {
                     newCategoryEditText.visibility = View.VISIBLE
-                    nextButton.isEnabled = false // Disable the next button initially
+                    nextButton.isEnabled = false
                 } else {
                     newCategoryEditText.visibility = View.GONE
                     currentItem?.category = selectedCategory
@@ -267,10 +265,8 @@ class AddingProcessActivity : AppCompatActivity() {
             }
         }
 
-        // Add logic to handle the creation of a new category
         newCategoryEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                // Enable the create button only if the new category name is valid
                 nextButton.isEnabled = isValidCategoryName(s.toString().trim())
             }
 
@@ -370,6 +366,7 @@ class AddingProcessActivity : AppCompatActivity() {
 
     private fun saveItemAndFinishActivity() {
         currentItem?.let { item ->
+            item.quantity = 1
             lifecycleScope.launch {
                 Inventory.database.itemDao().insertItem(item)
                 finish()

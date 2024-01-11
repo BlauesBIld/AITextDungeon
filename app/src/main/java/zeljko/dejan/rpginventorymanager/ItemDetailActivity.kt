@@ -44,7 +44,7 @@ class ItemDetailActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadItemDetails() // Reload item details when the activity resumes
+        loadItemDetails()
     }
 
     private fun updateUI(item: Item) {
@@ -72,7 +72,7 @@ class ItemDetailActivity : AppCompatActivity() {
                 }
                 gravity = Gravity.CENTER
                 textSize = 18f
-                setTextColor(ContextCompat.getColor(context, R.color.primaryColor))
+                setTextColor(ContextCompat.getColor(context, R.color.neutralColor))
             }
             itemPropertiesLayout.addView(propertyTextView)
         }
@@ -95,10 +95,19 @@ class ItemDetailActivity : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.white))
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.white))
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
 
-        dialog.window?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.secondaryLightColor)))
+        dialog.window?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    this,
+                    R.color.secondaryLightColor
+                )
+            )
+        )
     }
 
     private fun deleteItem() {
@@ -119,7 +128,6 @@ class ItemDetailActivity : AppCompatActivity() {
                 val item = withContext(Dispatchers.IO) {
                     Inventory.database.itemDao().getItemByName(itemName)
                 }
-                // Now update the UI with the item details
                 updateUI(item)
             }
         }

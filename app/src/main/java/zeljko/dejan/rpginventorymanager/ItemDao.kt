@@ -1,7 +1,6 @@
 package zeljko.dejan.rpginventorymanager
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -11,7 +10,6 @@ interface ItemDao {
     @Query("SELECT * FROM items")
     fun getAllItems(): List<Item>
 
-    //select distinct category from items
     @Query("SELECT DISTINCT category FROM items")
     fun getAllCategories(): List<String>
 
@@ -26,4 +24,10 @@ interface ItemDao {
 
     @Update
     fun updateItem(currentItem: Item)
+
+    @Query("SELECT * FROM items WHERE name LIKE :query")
+    fun searchItemsThatContainQuery(query: String): List<Item>
+
+    @Query("SELECT * FROM items ORDER BY name ASC")
+    suspend fun getItemsSortedByNameAsc(): List<Item>
 }
