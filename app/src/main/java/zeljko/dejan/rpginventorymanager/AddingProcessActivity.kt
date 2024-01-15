@@ -232,7 +232,7 @@ class AddingProcessActivity : AppCompatActivity() {
 
         categoriesList.add("New Category")
         categoriesList.addAll(Item.defaultCategories)
-        Inventory.database.itemDao().getAllCategories().forEach { category ->
+        AITextDungeon.database.itemDao().getAllCategories().forEach { category ->
             if (category !in categoriesList && category != "")
                 categoriesList.add(category)
         }
@@ -368,7 +368,7 @@ class AddingProcessActivity : AppCompatActivity() {
         currentItem?.let { item ->
             item.quantity = 1
             lifecycleScope.launch {
-                Inventory.database.itemDao().insertItem(item)
+                AITextDungeon.database.itemDao().insertItem(item)
                 finish()
             }
         }

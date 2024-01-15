@@ -3,18 +3,20 @@ package zeljko.dejan.rpginventorymanager
 import android.app.Application
 import androidx.room.Room
 
-class Inventory : Application() {
+class AITextDungeon : Application() {
     companion object {
-        val database: InventoryDatabase by lazy {
-            Room.databaseBuilder(Inventory.instance.applicationContext,
-                InventoryDatabase::class.java,
-                "inventory.db")
+        val database: Database by lazy {
+            Room.databaseBuilder(
+                AITextDungeon.instance.applicationContext,
+                Database::class.java,
+                "inventory.db"
+            )
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build()
         }
 
-        lateinit var instance: Inventory
+        lateinit var instance: AITextDungeon
             private set
     }
 

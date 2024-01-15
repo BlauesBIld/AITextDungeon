@@ -56,7 +56,7 @@ class ItemEditActivity : AppCompatActivity() {
     private fun fetchItemDetails(itemName: String) {
         lifecycleScope.launch {
             currentItem = withContext(Dispatchers.IO) {
-                Inventory.database.itemDao().getItemByName(itemName)
+                AITextDungeon.database.itemDao().getItemByName(itemName)
             }
 
             currentItem?.let { item ->
@@ -73,7 +73,7 @@ class ItemEditActivity : AppCompatActivity() {
         val categories = mutableListOf<String>()
         lifecycleScope.launch {
             categories.addAll(Item.defaultCategories)
-            Inventory.database.itemDao().getAllCategories().forEach { category ->
+            AITextDungeon.database.itemDao().getAllCategories().forEach { category ->
                 if (category !in categories && category != "")
                     categories.add(category)
             }
@@ -155,7 +155,7 @@ class ItemEditActivity : AppCompatActivity() {
         updatedItem?.let { item ->
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    Inventory.database.itemDao().updateItem(item)
+                    AITextDungeon.database.itemDao().updateItem(item)
                 }
                 finish()
             }

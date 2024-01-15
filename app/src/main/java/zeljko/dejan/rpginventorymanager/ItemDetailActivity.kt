@@ -115,7 +115,7 @@ class ItemDetailActivity : AppCompatActivity() {
         itemName?.let {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    Inventory.database.itemDao().deleteItemByName(it)
+                    AITextDungeon.database.itemDao().deleteItemByName(it)
                 }
                 finish()
             }
@@ -126,7 +126,7 @@ class ItemDetailActivity : AppCompatActivity() {
         if (itemName.isNotEmpty()) {
             lifecycleScope.launch {
                 val item = withContext(Dispatchers.IO) {
-                    Inventory.database.itemDao().getItemByName(itemName)
+                    AITextDungeon.database.itemDao().getItemByName(itemName)
                 }
                 updateUI(item)
             }

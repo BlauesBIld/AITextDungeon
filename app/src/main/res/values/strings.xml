@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RPGInventoryManager</string>
+    <string name="app_name">AITextDungeon</string>
     <string name="add_new_item">Add New Item</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
@@ -23,4 +23,6 @@
     <string name="item_icon">item icon</string>
     <string name="assign_category">Assign Category</string>
     <string name="set_properties">Set Properties</string>
+    <string name="ai_text_dungeon">AI Text Dungeon</string>
+    <string name="load">Load</string>
 </resources>
