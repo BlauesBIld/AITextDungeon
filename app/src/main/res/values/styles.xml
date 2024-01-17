@@ -1,6 +1,8 @@
 <resources>
+
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:statusBarColor">@color/secondaryColor</item>
     </style>
 
     <style name="BottomNavigationViewTextAppearance">
