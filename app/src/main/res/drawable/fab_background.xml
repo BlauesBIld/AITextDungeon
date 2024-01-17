@@ -1,17 +1,13 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Shadow Layer -->
     <item android:left="4dp" android:top="4dp">
         <shape android:shape="oval">
             <solid android:color="#40000000"/>
         </shape>
     </item>
 
-    <!-- Button Layer with Outline -->
     <item android:bottom="4dp" android:right="4dp">
         <shape android:shape="oval">
-            <!-- Outline (Stroke) -->
             <stroke android:width="2dp" android:color="@android:color/black"/>
-            <!-- Button Color -->
             <solid android:color="@color/green"/>
         </shape>
     </item>

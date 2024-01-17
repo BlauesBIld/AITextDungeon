@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import zeljko.dejan.rpginventorymanager.database.Item
 
 class ItemsAdapter(
     private val items: MutableList<Item>,
