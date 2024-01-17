@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import zeljko.dejan.rpginventorymanager.database.Chat
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ChatCardAdapter(
     private val chatCards: MutableList<Chat>,
@@ -35,8 +37,13 @@ class ChatCardAdapter(
     override fun onBindViewHolder(holder: ChatCardViewHolder, position: Int) {
         val item = chatCards[position]
         holder.titleView.text = item.title
-        holder.createdOnView.text = "Created on: " + item.creationDate
-        holder.lastPlayedView.text = "Last opened on: " + item.lastPlayedDate
+        holder.createdOnView.text = "Created on: " + formatDate(item.creationDate)
+        holder.lastPlayedView.text = "Last opened on: " + formatDate(item.lastPlayedDate)
+    }
+
+    private fun formatDate(timestamp: Long): String {
+        val formatter = SimpleDateFormat("d.M.yyyy", Locale.getDefault())
+        return formatter.format(timestamp)
     }
 
     override fun getItemCount(): Int = chatCards.size

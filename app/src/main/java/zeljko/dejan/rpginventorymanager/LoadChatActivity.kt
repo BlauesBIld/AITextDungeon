@@ -1,5 +1,6 @@
 package zeljko.dejan.rpginventorymanager
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,13 +12,14 @@ class LoadChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_load_chat)
 
-        val chatCards = mutableListOf(
-            Chat("1", "Chat 1", "https://i.imgur.com/2zYQ5nT.png", 0, 0),
-            Chat("1", "Chat 1", "https://i.imgur.com/2zYQ5nT.png", 0, 0),
-        )
+        val chatCards = mutableListOf<Chat>()
+
+        chatCards.addAll(AITextDungeon.database.chatDao().getAllChats())
 
         val adapter = ChatCardAdapter(chatCards) { item ->
-            // Handle item click
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra("chat_id", item.id)
+            startActivity(intent)
         }
 
         val recyclerView: RecyclerView = findViewById(R.id.chatsRecyclerView)

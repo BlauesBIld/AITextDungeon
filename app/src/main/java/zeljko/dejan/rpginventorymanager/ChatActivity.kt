@@ -8,14 +8,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import zeljko.dejan.rpginventorymanager.database.Chat
 import zeljko.dejan.rpginventorymanager.database.Message
 import java.util.UUID
-
-enum class ChatState {
-    AWAITING_DESCRIPTION,
-    AWAITING_TITLE,
-    IN_PROGRESS
-}
 
 class ChatActivity : AppCompatActivity() {
     private lateinit var messagesRecyclerView: RecyclerView
@@ -55,9 +50,8 @@ class ChatActivity : AppCompatActivity() {
         val messages: MutableList<Message> = mutableListOf()
 
         if (chatId != null) {
-            messages.addAll(
-                AITextDungeon.database.messageDao().getMessagesForChat(chatId.toString())
-            )
+            loadChatInformationAndMessagesFromDatabase(messages)
+            chatState = ChatState.IN_PROGRESS
         } else {
             messages.add(
                 Message(
@@ -72,6 +66,55 @@ class ChatActivity : AppCompatActivity() {
 
         adapter = MessageAdapter(messages)
         messagesRecyclerView.adapter = adapter
+        messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
+    }
+
+    private fun loadChatInformationAndMessagesFromDatabase(messages: MutableList<Message>) {
+        val chat = AITextDungeon.database.chatDao().getChatById(chatId.toString())
+        currentTitle = chat.title
+        currentDescription = chat.description
+        currentChatTitleTextView.text = currentTitle
+
+        messages.add(
+            Message(
+                UUID.randomUUID().toString(),
+                chatId.toString(),
+                -1,
+                ChatConstants.AI_NAME,
+                ChatConstants.FIRST_MESSAGE
+            )
+        )
+        messages.add(
+            Message(
+                UUID.randomUUID().toString(),
+                chatId.toString(),
+                -1,
+                ChatConstants.PLAYER_NAME,
+                currentDescription
+            )
+        )
+        messages.add(
+            Message(
+                UUID.randomUUID().toString(),
+                chatId.toString(),
+                -1,
+                ChatConstants.AI_NAME,
+                "Please enter a title for your adventure."
+            )
+        )
+        messages.add(
+            Message(
+                UUID.randomUUID().toString(),
+                chatId.toString(),
+                -1,
+                ChatConstants.PLAYER_NAME,
+                currentTitle
+            )
+        )
+
+        messages.addAll(
+            AITextDungeon.database.messageDao().getMessagesForChat(chatId.toString())
+        )
     }
 
     private fun setupMessageInputListener() {
@@ -102,6 +145,7 @@ class ChatActivity : AppCompatActivity() {
                     currentTitle = userInput
                     currentChatTitleTextView.text = currentTitle
                     createNewChatInDatabase()
+
                     displayInitialStoryMessage()
                     chatState = ChatState.IN_PROGRESS
                 } else {
@@ -128,7 +172,17 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun createNewChatInDatabase() {
-
+        val newChat = Chat(
+            UUID.randomUUID().toString(),
+            currentTitle,
+            currentDescription,
+            "tbd",
+            "tbd",
+            System.currentTimeMillis(),
+            System.currentTimeMillis(),
+        )
+        AITextDungeon.database.chatDao().insertChat(newChat)
+        chatId = newChat.id
     }
 
     private fun isValidTitle(title: String): Boolean {
@@ -144,6 +198,9 @@ class ChatActivity : AppCompatActivity() {
             text
         )
         adapter.addMessage(newMessage)
+        if (chatId != null) {
+            AITextDungeon.database.messageDao().insertMessage(newMessage)
+        }
         messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 

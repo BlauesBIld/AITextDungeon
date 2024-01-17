@@ -10,7 +10,7 @@ class AITextDungeon : Application() {
             Room.databaseBuilder(
                 AITextDungeon.instance.applicationContext,
                 Database::class.java,
-                "inventory.db"
+                "aitextdungeon.db"
             )
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()

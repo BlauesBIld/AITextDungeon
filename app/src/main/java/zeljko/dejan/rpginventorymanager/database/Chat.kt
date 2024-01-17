@@ -8,6 +8,8 @@ data class Chat(
     @PrimaryKey
     val id: String,
     val title: String,
+    val description: String,
+    val threadId: String,
     val coverImage: String,
     val creationDate: Long,
     val lastPlayedDate: Long
