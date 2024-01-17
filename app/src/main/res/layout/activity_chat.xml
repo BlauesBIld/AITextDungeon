@@ -17,6 +17,14 @@
         android:textSize="16sp"
         android:textColor="@color/white" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/grey"
+        android:layout_above="@+id/messagesRecyclerView"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesRecyclerView"
         android:layout_width="match_parent"
