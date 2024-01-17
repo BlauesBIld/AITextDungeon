@@ -1,8 +1,10 @@
-package zeljko.dejan.rpginventorymanager
+package zeljko.dejan.rpginventorymanager.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import zeljko.dejan.rpginventorymanager.Converters
+import zeljko.dejan.rpginventorymanager.R
 
 @Entity(tableName = "items")
 @TypeConverters(Converters::class)

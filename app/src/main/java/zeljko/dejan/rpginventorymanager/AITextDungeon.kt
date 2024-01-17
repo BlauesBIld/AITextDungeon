@@ -2,6 +2,7 @@ package zeljko.dejan.rpginventorymanager
 
 import android.app.Application
 import androidx.room.Room
+import zeljko.dejan.rpginventorymanager.database.Database
 
 class AITextDungeon : Application() {
     companion object {

@@ -21,6 +21,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import zeljko.dejan.rpginventorymanager.database.Item
 import zeljko.dejan.rpginventorymanager.databinding.ActivityAddingProcessBinding
 
 class AddingProcessActivity : AppCompatActivity() {

@@ -8,6 +8,7 @@
     <color name="primaryColorDisabled">#9F5700</color>
     <color name="secondaryColor">#1B1B1B</color>
     <color name="secondaryLightColor">#303030</color>
+    <color name="secondaryVeryLightColor">#4B4B4B</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#DDDDDD</color>
     <color name="neutralColor">#FFFFFF</color>
