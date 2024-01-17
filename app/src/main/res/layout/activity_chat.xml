@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/secondaryColor"
@@ -17,7 +18,7 @@
         android:textColor="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatRecyclerView"
+        android:id="@+id/messagesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/inputLayout"
