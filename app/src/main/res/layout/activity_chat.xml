@@ -18,7 +18,7 @@
         android:text="New World"
         android:textSize="28sp"
         android:textColor="@color/white"
-        app:fontFamily="@font/jura_semibold"
+        app:fontFamily="@font/jura_bold"
         android:layout_marginStart="12dp" />
 
     <View

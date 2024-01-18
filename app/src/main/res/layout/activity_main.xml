@@ -22,12 +22,17 @@
         android:textColor="@color/white"
         android:textSize="48sp"
         android:maxLines="2"
-        app:fontFamily="@font/jura_semibold" />
+        app:fontFamily="@font/jura_bold" />
 
-    <Space
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="246dp"
         android:layout_height="0dp"
-        android:layout_weight="4" />
+        android:layout_weight="4"
+        android:gravity="center"
+        android:text="enter an imaginary world to your liking"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:fontFamily="@font/jura_semibold" />
 
     <Button
         android:id="@+id/createButton"
