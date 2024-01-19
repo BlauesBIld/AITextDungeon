@@ -36,7 +36,8 @@
                 android:textSize="20sp"
                 android:text="Title"
                 android:textColor="@color/white"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                app:fontFamily="@font/inter_regular" />
 
             <TextView
                 android:id="@+id/cardCreatedOn"
@@ -44,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:text="Created on: "
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                app:fontFamily="@font/inter_regular" />
 
             <TextView
                 android:id="@+id/cardLastPlayed"
@@ -52,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:text="Last played: "
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                app:fontFamily="@font/inter_regular" />
 
         </LinearLayout>
     </LinearLayout>
