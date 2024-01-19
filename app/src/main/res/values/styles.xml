@@ -3,6 +3,7 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:textColor">@color/primaryColor</item>
         <item name="android:statusBarColor">@color/secondaryColor</item>
+        <item name="android:fontFamily">@font/inter_regular</item>
     </style>
 
     <style name="BottomNavigationViewTextAppearance">

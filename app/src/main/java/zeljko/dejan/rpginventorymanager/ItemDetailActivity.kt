@@ -83,7 +83,7 @@ class ItemDetailActivity : AppCompatActivity() {
     private fun showDeleteConfirmationDialog() {
         val message = SpannableString("Do you really want to delete this item?")
         message.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(this, R.color.secondaryTextColor)),
+            ForegroundColorSpan(ContextCompat.getColor(this, R.color.secondaryNeutralColor)),
             0, message.length, Spanned.SPAN_INCLUSIVE_INCLUSIVE
         )
 
