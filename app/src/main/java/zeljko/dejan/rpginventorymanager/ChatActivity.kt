@@ -8,6 +8,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import zeljko.dejan.rpginventorymanager.database.Chat
 import zeljko.dejan.rpginventorymanager.database.Message
 import java.util.UUID
@@ -144,9 +147,11 @@ class ChatActivity : AppCompatActivity() {
                 if (isValidTitle(userInput)) {
                     currentTitle = userInput
                     currentChatTitleTextView.text = currentTitle
-                    createNewChatInDatabase()
-
-                    displayInitialStoryMessage()
+                    displayMessage(
+                        ChatConstants.AI_NAME,
+                        "Generating world... keep in mind that generating messages can take a while."
+                    )
+                    createNewChatInDatabaseAndDisplayIntroMessage()
                     chatState = ChatState.IN_PROGRESS
                 } else {
                     displayMessage(
@@ -157,32 +162,49 @@ class ChatActivity : AppCompatActivity() {
             }
 
             ChatState.IN_PROGRESS -> {
-                val response = processUserInput(userInput)
                 displayMessage(ChatConstants.PLAYER_NAME, userInput)
-                displayMessage(ChatConstants.AI_NAME, response)
+                processUserInputAndDisplayAIMessage(userInput)
             }
         }
     }
 
-    private fun displayInitialStoryMessage() {
-        displayMessage(
-            ChatConstants.AI_NAME,
-            processUserInput("")
-        )
+    private fun displayIntroMessage() {
+        val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
+        CoroutineScope(Dispatchers.Main).launch {
+            val message = ChatService.callGetNextMessage(threadId)
+            message?.let {
+                displayMessage(
+                    ChatConstants.AI_NAME,
+                    message
+                )
+            } ?: run {
+                throw Exception("Failed to get initial story message")
+            }
+        }
     }
 
-    private fun createNewChatInDatabase() {
-        val newChat = Chat(
-            UUID.randomUUID().toString(),
-            currentTitle,
-            currentDescription,
-            "tbd",
-            "tbd",
-            System.currentTimeMillis(),
-            System.currentTimeMillis(),
-        )
-        AITextDungeon.database.chatDao().insertChat(newChat)
-        chatId = newChat.id
+    private fun createNewChatInDatabaseAndDisplayIntroMessage() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val threadId = ChatService.callCreateChatService(currentTitle, currentDescription)
+            threadId?.let {
+                val newChat = Chat(
+                    UUID.randomUUID().toString(),
+                    currentTitle,
+                    currentDescription,
+                    threadId,
+                    "tbd",
+                    System.currentTimeMillis(),
+                    System.currentTimeMillis(),
+                )
+                AITextDungeon.database.chatDao().insertChat(newChat)
+                chatId = newChat.id
+
+                displayIntroMessage()
+            } ?: run {
+                throw Exception("Failed to create chat")
+                // TODO: Send message and retry button to user
+            }
+        }
     }
 
     private fun isValidTitle(title: String): Boolean {
@@ -198,9 +220,11 @@ class ChatActivity : AppCompatActivity() {
             text
         )
         adapter.addMessage(newMessage)
+
         if (chatId != null) {
             AITextDungeon.database.messageDao().insertMessage(newMessage)
         }
+
         messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 
@@ -224,10 +248,19 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun processUserInput(input: String): String {
-        // Implement the logic to send the input to the AI and get a response
-        // This is a placeholder; actual implementation will depend on how you integrate with the AI
-        return "AI response to '$input'"
+    private fun processUserInputAndDisplayAIMessage(input: String) {
+        val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
+        CoroutineScope(Dispatchers.Main).launch {
+            val message = ChatService.callSendMessageAndGetResponse(threadId, input)
+            message?.let {
+                displayMessage(
+                    ChatConstants.AI_NAME,
+                    message
+                )
+            } ?: run {
+                throw Exception("Failed to get message")
+            }
+        }
     }
 }
 
