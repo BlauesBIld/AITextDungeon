@@ -149,7 +149,7 @@ class ChatActivity : AppCompatActivity() {
                     currentChatTitleTextView.text = currentTitle
                     displayMessage(
                         ChatConstants.AI_NAME,
-                        "Generating world... keep in mind that generating messages can take a while."
+                        "Generating world... \n\nKeep in mind that generating messages takes a while."
                     )
                     createNewChatInDatabaseAndDisplayIntroMessage()
                     chatState = ChatState.IN_PROGRESS
