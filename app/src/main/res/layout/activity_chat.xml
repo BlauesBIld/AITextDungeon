@@ -63,7 +63,7 @@
             android:src="@drawable/ic_send"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_marginHorizontal="4dp"
-            android:tint="@color/primaryColor" />
+            app:tint="@color/primaryColor" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -4,6 +4,7 @@
         <item name="android:textColor">@color/primaryColor</item>
         <item name="android:statusBarColor">@color/secondaryColor</item>
         <item name="android:fontFamily">@font/inter_regular</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_color</item>
     </style>
 
     <style name="BottomNavigationViewTextAppearance">
