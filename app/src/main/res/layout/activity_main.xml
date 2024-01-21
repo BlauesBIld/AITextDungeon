@@ -5,34 +5,34 @@
     android:background="@color/secondaryColor"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:paddingTop="16dp">
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="2" />
 
     <TextView
         android:id="@+id/headerTitle"
-        android:layout_width="224dp"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/ai_text_dungeon"
         android:textColor="@color/white"
-        android:textSize="48sp"
+        android:textSize="52sp"
         android:maxLines="2"
+        android:layout_marginBottom="16dp"
         app:fontFamily="@font/jet_brains_mono_bold" />
 
     <TextView
         android:id="@+id/headerSubtitle"
         android:layout_width="246dp"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:gravity="center"
         android:text="enter an imaginary world to your liking"
         android:textColor="@color/white"
-        android:textSize="22sp"
+        android:textSize="24sp"
         app:fontFamily="@font/jura_semibold" />
 
     <Button
@@ -41,7 +41,7 @@
         android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_marginHorizontal="100dp"
+        android:layout_marginHorizontal="64dp"
         android:layout_marginVertical="16dp"
         android:text="@string/create"
         android:textSize="20sp"
@@ -54,7 +54,7 @@
         android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_marginHorizontal="80dp"
+        android:layout_marginHorizontal="64dp"
         android:layout_marginVertical="16dp"
         android:text="@string/load"
         android:textSize="20sp"
@@ -64,7 +64,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2" />
+        android:layout_weight="3" />
 
     <TextView
         android:id="@+id/footer"

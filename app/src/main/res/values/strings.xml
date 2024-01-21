@@ -19,11 +19,11 @@
     <string name="property_name_hint">Enter name</string>
     <string name="property_value_hint">Enter value</string>
     <string name="enter_new_category_hint">Enter New Category Name</string>
-    <string name="create">Create</string>
+    <string name="create">Create World</string>
     <string name="item_icon">item icon</string>
     <string name="assign_category">Assign Category</string>
     <string name="set_properties">Set Properties</string>
     <string name="ai_text_dungeon">AI Text Dungeon</string>
-    <string name="load">Load</string>
+    <string name="load">Load World</string>
     <string name="your_adventures">Your Adventures</string>
 </resources>

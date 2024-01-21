@@ -36,7 +36,8 @@
                 android:textSize="20sp"
                 android:text="Title"
                 android:textColor="@color/white"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/jet_brains_mono_medium" />
 
             <TextView
                 android:id="@+id/cardCreatedOn"
