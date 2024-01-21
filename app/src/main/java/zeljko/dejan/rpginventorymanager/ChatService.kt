@@ -10,7 +10,7 @@ import java.net.URL
 
 class ChatService {
     companion object {
-        private const val BASE_URL = "http://192.168.1.20:21061"
+        private const val BASE_URL = "https://detschn.net/atd"
 
         suspend fun callCreateChatService(title: String, description: String): String? {
             val urlString = "$BASE_URL/createChat"
