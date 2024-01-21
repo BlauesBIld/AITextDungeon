@@ -25,6 +25,7 @@
         app:fontFamily="@font/jura_bold" />
 
     <TextView
+        android:id="@+id/headerSubtitle"
         android:layout_width="246dp"
         android:layout_height="0dp"
         android:layout_weight="4"
