@@ -3,6 +3,7 @@ package zeljko.dejan.rpginventorymanager.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface ChatDao {
@@ -20,4 +21,10 @@ interface ChatDao {
 
     @Query("SELECT * FROM chats ORDER BY title ASC")
     suspend fun getChatsSortedByNameAsc(): List<Chat>
+
+    @Update
+    fun updateChat(chat: Chat)
+
+    @Query("DELETE FROM chats WHERE id = :chatId")
+    fun deleteChatById(chatId: String)
 }

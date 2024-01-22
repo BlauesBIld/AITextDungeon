@@ -2,12 +2,14 @@ package zeljko.dejan.rpginventorymanager
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -70,14 +72,79 @@ class ChatActivity : AppCompatActivity() {
         }
 
         popupView.findViewById<TextView>(R.id.rename_chat).setOnClickListener {
-            // Handle Rename Chat
+            showRenameDialog()
             popupWindow.dismiss()
         }
 
         popupView.findViewById<TextView>(R.id.delete_chat).setOnClickListener {
-            // Handle Delete Chat
+            showConfirmationDialog()
             popupWindow.dismiss()
         }
+    }
+
+    private fun showConfirmationDialog() {
+        val dialog = AlertDialog.Builder(this, R.style.CustomAlertDialog)
+            .setTitle("Delete Chat")
+            .setMessage("Are you sure you want to delete this chat?")
+            .setPositiveButton("Delete", null)
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            callDeleteChatService()
+            dialog.dismiss()
+        }
+    }
+
+    private fun callDeleteChatService() {
+        val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
+        CoroutineScope(Dispatchers.Main).launch {
+            val success = ChatService.callDeleteChatService(threadId)
+            if (success) {
+                Log.i("ChatActivity", "callDeleteChatService: Successfully deleted chat")
+            } else {
+                throw Exception("Failed to delete chat")
+            }
+        }
+        AITextDungeon.database.chatDao().deleteChatById(chatId.toString())
+        AITextDungeon.database.messageDao().deleteMessagesForChat(chatId.toString())
+        finish()
+    }
+
+    private fun showRenameDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_rename_chat, null)
+        val editTextChatName = dialogView.findViewById<EditText>(R.id.editTextChatName)
+
+        val dialog = AlertDialog.Builder(this, R.style.CustomAlertDialog)
+            .setTitle("Rename Chat")
+            .setView(dialogView)
+            .setPositiveButton("Rename", null)
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        editTextChatName.text.append(currentTitle)
+
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val newChatName = editTextChatName.text.toString().trim()
+            if (newChatName.isNotEmpty()) {
+                renameChat(newChatName)
+                dialog.dismiss()
+            } else {
+                editTextChatName.error = "Name cannot be empty"
+            }
+        }
+    }
+
+    private fun renameChat(newName: String) {
+        currentChatTitleTextView.text = newName
+        currentTitle = newName
+        val chat = AITextDungeon.database.chatDao().getChatById(chatId.toString())
+        chat.title = newName
+        AITextDungeon.database.chatDao().updateChat(chat)
     }
 
     private fun initializeMessages() {

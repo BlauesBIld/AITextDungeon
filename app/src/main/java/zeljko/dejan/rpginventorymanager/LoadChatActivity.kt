@@ -12,6 +12,16 @@ class LoadChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_load_chat)
 
+        getChatsAndSetAdapter()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        getChatsAndSetAdapter()
+    }
+
+    private fun getChatsAndSetAdapter() {
         val chatCards = mutableListOf<Chat>()
 
         chatCards.addAll(AITextDungeon.database.chatDao().getAllChats())

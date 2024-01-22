@@ -38,4 +38,10 @@
         <item name="android:popupBackground">@color/secondaryLightColor</item>
         <item name="android:dropDownSelector">@drawable/spinner_selector</item>
     </style>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/rounded_dialog_background</item>
+        <item name="android:textColor">@color/white</item>
+
+    </style>
 </resources>

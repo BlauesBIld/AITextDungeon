@@ -14,4 +14,7 @@ interface MessageDao {
 
     @Query("SELECT * FROM messages WHERE chatId = :chatId AND author = :author")
     fun getMessagesByAuthor(chatId: String, author: String): List<Message>
+
+    @Query("DELETE FROM messages WHERE chatId = :chatId")
+    fun deleteMessagesForChat(chatId: String)
 }

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class Chat(
     @PrimaryKey
     val id: String,
-    val title: String,
+    var title: String,
     val description: String,
     val threadId: String,
     val coverImage: String,
