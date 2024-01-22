@@ -2,34 +2,36 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/secondaryLightColor"
-    android:padding="16dp">
+    android:background="@drawable/rounded_dropdown_menu"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="16dp">
+
 
     <TextView
         android:id="@+id/open_inventory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Open Inventory"
-        android:padding="8dp"
+        android:padding="16dp"
         android:enabled="false"
-        android:gravity="center"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:fontFamily="@font/jet_brains_mono_medium" />
 
     <TextView
         android:id="@+id/rename_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Rename Chat"
-        android:padding="8dp"
-        android:gravity="center"
-        android:textColor="@color/white" />
+        android:padding="16dp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/jet_brains_mono_medium" />
 
     <TextView
         android:id="@+id/delete_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Delete Chat"
-        android:padding="8dp"
-        android:gravity="center"
-        android:textColor="#FF0000" />
+        android:padding="16dp"
+        android:textColor="#FF4229"
+        android:fontFamily="@font/jet_brains_mono_medium" />
 </LinearLayout>
