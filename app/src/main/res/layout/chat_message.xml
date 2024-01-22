@@ -33,8 +33,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_preview_background"
-        android:text="Generating response..."
+        android:text="Generating..."
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_marginTop="4dp" />
 </LinearLayout>
