@@ -151,6 +151,7 @@ class ChatActivity : AppCompatActivity() {
                         ChatConstants.AI_NAME,
                         "Generating world... \n\nKeep in mind that generating messages takes a while."
                     )
+                    displayDummyMessage()
                     createNewChatInDatabaseAndDisplayIntroMessage()
                     chatState = ChatState.IN_PROGRESS
                 } else {
@@ -163,6 +164,7 @@ class ChatActivity : AppCompatActivity() {
 
             ChatState.IN_PROGRESS -> {
                 displayMessage(ChatConstants.PLAYER_NAME, userInput)
+                displayDummyMessage()
                 processUserInputAndDisplayAIMessage(userInput)
             }
         }
@@ -173,8 +175,7 @@ class ChatActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             val message = ChatService.callGetNextMessage(threadId)
             message?.let {
-                displayMessage(
-                    ChatConstants.AI_NAME,
+                updateLastAIMessageText(
                     message
                 )
             } ?: run {
@@ -228,6 +229,36 @@ class ChatActivity : AppCompatActivity() {
         messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 
+    private fun displayDummyMessage() {
+        val newMessage = Message(
+            "-1",
+            "-1",
+            System.currentTimeMillis(),
+            ChatConstants.AI_NAME,
+            ""
+        )
+        adapter.addMessage(newMessage)
+
+        messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
+    }
+
+    private fun updateLastAIMessageText(text: String) {
+        val newMessage = Message(
+            UUID.randomUUID().toString(),
+            chatId ?: "-1",
+            System.currentTimeMillis(),
+            ChatConstants.AI_NAME,
+            text
+        )
+        adapter.updateLastAIMessage(newMessage)
+
+        if (chatId != null) {
+            AITextDungeon.database.messageDao().insertMessage(newMessage)
+        }
+
+        messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
+    }
+
     private fun setupKeyboardVisibilityListener() {
         val rootView = findViewById<RecyclerView>(R.id.messagesRecyclerView)
         rootView.viewTreeObserver.addOnGlobalLayoutListener {
@@ -253,8 +284,7 @@ class ChatActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             val message = ChatService.callSendMessageAndGetResponse(threadId, input)
             message?.let {
-                displayMessage(
-                    ChatConstants.AI_NAME,
+                updateLastAIMessageText(
                     message
                 )
             } ?: run {

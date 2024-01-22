@@ -1,22 +1,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#1B1B1B"
     android:orientation="vertical"
-    android:paddingVertical="8dp"
-    android:background="#1B1B1B">
+    android:paddingVertical="8dp">
 
     <TextView
         android:id="@+id/textAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textPreviewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_preview_background"
+        android:text="Generating response..."
+        android:textColor="@color/white"
         android:textSize="16sp"
-        android:textColor="@android:color/white" />
+        android:visibility="gone" />
 </LinearLayout>
