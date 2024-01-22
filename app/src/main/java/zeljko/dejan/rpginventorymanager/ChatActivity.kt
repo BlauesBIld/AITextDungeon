@@ -2,8 +2,11 @@ package zeljko.dejan.rpginventorymanager
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +22,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messagesRecyclerView: RecyclerView
     private lateinit var adapter: MessageAdapter
     private lateinit var currentChatTitleTextView: TextView
+    private lateinit var menuButton: ImageButton
 
     private var chatState = ChatState.AWAITING_DESCRIPTION
     private var chatId: String? = null
@@ -43,9 +47,37 @@ class ChatActivity : AppCompatActivity() {
         messagesRecyclerView.layoutManager = LinearLayoutManager(this)
         currentChatTitleTextView = findViewById(R.id.chatTitle)
 
+        val menuButton = findViewById<ImageButton>(R.id.menuButton)
+        menuButton.setOnClickListener { showPopupMenu(it) }
+
         initializeMessages()
         setupMessageInputListener()
         setupKeyboardVisibilityListener()
+    }
+
+    private fun showPopupMenu(anchor: View) {
+        val popupView = layoutInflater.inflate(R.layout.custom_popup_menu, null)
+
+        val popupWindow = PopupWindow(
+            popupView,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            showAsDropDown(anchor)
+            elevation = 10f
+            isOutsideTouchable = true
+        }
+
+        popupView.findViewById<TextView>(R.id.rename_chat).setOnClickListener {
+            // Handle Rename Chat
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.delete_chat).setOnClickListener {
+            // Handle Delete Chat
+            popupWindow.dismiss()
+        }
     }
 
     private fun initializeMessages() {

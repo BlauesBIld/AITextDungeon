@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/secondaryLightColor"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/open_inventory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Open Inventory"
+        android:padding="8dp"
+        android:enabled="false"
+        android:gravity="center"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/rename_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rename Chat"
+        android:padding="8dp"
+        android:gravity="center"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/delete_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Chat"
+        android:padding="8dp"
+        android:gravity="center"
+        android:textColor="#FF0000" />
+</LinearLayout>
