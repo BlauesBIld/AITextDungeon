@@ -37,8 +37,8 @@ class ChatCardAdapter(
     override fun onBindViewHolder(holder: ChatCardViewHolder, position: Int) {
         val item = chatCards[position]
         holder.titleView.text = item.title
-        holder.createdOnView.text = "Created on: " + formatDate(item.creationDate)
-        holder.lastPlayedView.text = "Last opened on: " + formatDate(item.lastPlayedDate)
+        holder.createdOnView.text = "Created on: " + formatDate(item.creationTimeStamp)
+        holder.lastPlayedView.text = "Last played: " + formatDate(item.lastPlayedTimeStamp)
     }
 
     private fun formatDate(timestamp: Long): String {

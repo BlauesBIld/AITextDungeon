@@ -55,6 +55,7 @@ class ChatActivity : AppCompatActivity() {
         initializeMessages()
         setupMessageInputListener()
         setupKeyboardVisibilityListener()
+        setLastTimePlayedTimeStampToNow()
     }
 
     private fun showPopupMenu(anchor: View) {
@@ -96,21 +97,6 @@ class ChatActivity : AppCompatActivity() {
             callDeleteChatService()
             dialog.dismiss()
         }
-    }
-
-    private fun callDeleteChatService() {
-        val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
-        CoroutineScope(Dispatchers.Main).launch {
-            val success = ChatService.callDeleteChatService(threadId)
-            if (success) {
-                Log.i("ChatActivity", "callDeleteChatService: Successfully deleted chat")
-            } else {
-                throw Exception("Failed to delete chat")
-            }
-        }
-        AITextDungeon.database.chatDao().deleteChatById(chatId.toString())
-        AITextDungeon.database.messageDao().deleteMessagesForChat(chatId.toString())
-        finish()
     }
 
     private fun showRenameDialog() {
@@ -389,6 +375,37 @@ class ChatActivity : AppCompatActivity() {
             } ?: run {
                 throw Exception("Failed to get message")
             }
+        }
+    }
+
+    private fun callDeleteChatService() {
+        val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
+        CoroutineScope(Dispatchers.Main).launch {
+            val success = ChatService.callDeleteChatService(threadId)
+            if (success) {
+                Log.i("ChatActivity", "callDeleteChatService: Successfully deleted chat")
+            } else {
+                throw Exception("Failed to delete chat")
+            }
+        }
+        AITextDungeon.database.chatDao().deleteChatById(chatId.toString())
+        AITextDungeon.database.messageDao().deleteMessagesForChat(chatId.toString())
+        chatId = null
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        setLastTimePlayedTimeStampToNow()
+    }
+
+    private fun setLastTimePlayedTimeStampToNow() {
+        if (chatId != null) {
+            val lastPlayedTimeStamp = System.currentTimeMillis()
+            val chat = AITextDungeon.database.chatDao().getChatById(chatId.toString())
+            chat.lastPlayedTimeStamp = lastPlayedTimeStamp
+            AITextDungeon.database.chatDao().updateChat(chat)
         }
     }
 }

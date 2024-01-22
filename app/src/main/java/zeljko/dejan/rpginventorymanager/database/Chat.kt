@@ -11,6 +11,6 @@ data class Chat(
     val description: String,
     val threadId: String,
     val coverImage: String,
-    val creationDate: Long,
-    val lastPlayedDate: Long
+    val creationTimeStamp: Long,
+    var lastPlayedTimeStamp: Long
 )
