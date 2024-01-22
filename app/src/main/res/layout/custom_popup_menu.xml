@@ -4,18 +4,31 @@
     android:orientation="vertical"
     android:background="@drawable/rounded_dropdown_menu"
     android:paddingHorizontal="8dp"
-    android:paddingVertical="16dp">
+    android:paddingVertical="8dp">
 
 
-    <TextView
-        android:id="@+id/open_inventory"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open Inventory"
-        android:padding="16dp"
-        android:enabled="false"
-        android:textColor="@color/white"
-        android:fontFamily="@font/jet_brains_mono_medium" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/open_inventory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open Inventory"
+            android:padding="16dp"
+            android:enabled="false"
+            android:textColor="@color/neutralColorDisabled"
+            android:fontFamily="@font/jet_brains_mono_medium" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/secondaryVeryLightColor"
+            android:layout_marginHorizontal="8dp" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/rename_chat"

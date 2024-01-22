@@ -139,44 +139,45 @@ class ChatService {
             }
         }
 
-        fun callDeleteChatService(threadId: String): Boolean {
+        suspend fun callDeleteChatService(threadId: String): Boolean {
             val urlString = "$BASE_URL/deleteChat"
             val jsonBody = JSONObject()
             jsonBody.put("threadId", threadId)
 
             Log.i("ChatService", "callDeleteChatService: Sending request to $urlString")
 
-            return try {
-                val url = URL(urlString)
-                with(url.openConnection() as HttpURLConnection) {
-                    requestMethod = "POST"
-                    doOutput = true
-                    setRequestProperty("Content-Type", "application/json")
-                    setRequestProperty("Accept", "application/json")
+            return withContext(Dispatchers.IO) {
+                try {
+                    val url = URL(urlString)
+                    with(url.openConnection() as HttpURLConnection) {
+                        requestMethod = "DELETE"
+                        doOutput = true
+                        setRequestProperty("Content-Type", "application/json")
+                        setRequestProperty("Accept", "application/json")
 
-                    OutputStreamWriter(outputStream).use { it.write(jsonBody.toString()) }
+                        OutputStreamWriter(outputStream).use { it.write(jsonBody.toString()) }
 
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        val result = inputStream.bufferedReader().use { it.readText() }
-                        Log.i(
-                            "ChatService",
-                            "callDeleteChatService: " + result
-                        )
+                        if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+                            val result = inputStream.bufferedReader().use { it.readText() }
+                            Log.i(
+                                "ChatService",
+                                "callDeleteChatService: " + result
+                            )
 
-                        true
-                    } else {
-                        Log.e(
-                            "ChatService",
-                            "callDeleteChatService: " + responseMessage
-                        )
-                        false
+                            true
+                        } else {
+                            Log.e(
+                                "ChatService",
+                                "callDeleteChatService: " + responseMessage
+                            )
+                            false
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    false
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                false
             }
-
         }
     }
 }
