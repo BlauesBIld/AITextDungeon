@@ -1,17 +1,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#1B1B1B"
     android:orientation="vertical"
-    android:paddingVertical="8dp">
+    android:background="#1B1B1B"
+    android:layout_marginBottom="16dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/secondaryLightColor"
+        android:layout_above="@+id/messagesRecyclerView"
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/textAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/jet_brains_mono_medium" />
 
     <TextView
         android:id="@+id/textMessage"
@@ -27,6 +35,5 @@
         android:background="@drawable/rounded_preview_background"
         android:text="Generating response..."
         android:textColor="@color/white"
-        android:textSize="16sp"
-        android:visibility="gone" />
+        android:textSize="16sp" />
 </LinearLayout>

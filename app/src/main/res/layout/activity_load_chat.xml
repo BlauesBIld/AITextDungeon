@@ -18,11 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:maxLines="2"
         android:text="@string/your_adventures"
         android:textColor="@color/white"
-        android:textSize="40sp"
-        android:maxLines="2"
-        app:fontFamily="@font/jura_bold" />
+        android:textSize="36sp"
+        app:fontFamily="@font/jet_brains_mono_bold" />
 
     <Space
         android:layout_width="match_parent"
