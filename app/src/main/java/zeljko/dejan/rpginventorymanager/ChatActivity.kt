@@ -11,6 +11,7 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -55,7 +56,6 @@ class ChatActivity : AppCompatActivity() {
         initializeMessages()
         setupMessageInputListener()
         setupKeyboardVisibilityListener()
-        setLastTimePlayedTimeStampToNow()
     }
 
     private fun showPopupMenu(anchor: View) {
@@ -72,14 +72,29 @@ class ChatActivity : AppCompatActivity() {
             isOutsideTouchable = true
         }
 
-        popupView.findViewById<TextView>(R.id.rename_chat).setOnClickListener {
-            showRenameDialog()
-            popupWindow.dismiss()
-        }
 
-        popupView.findViewById<TextView>(R.id.delete_chat).setOnClickListener {
-            showConfirmationDialog()
-            popupWindow.dismiss()
+        if (chatId != null) {
+            popupView.findViewById<TextView>(R.id.rename_chat).setOnClickListener {
+                showRenameDialog()
+                popupWindow.dismiss()
+            }
+
+            popupView.findViewById<TextView>(R.id.delete_chat).setOnClickListener {
+                showConfirmationDialog()
+                popupWindow.dismiss()
+            }
+        } else {
+            popupView.findViewById<TextView>(R.id.rename_chat).apply {
+                isEnabled = false
+                // Optional: Change text color to indicate disabled state
+                setTextColor(ContextCompat.getColor(context, R.color.neutralColorDisabled))
+            }
+
+            popupView.findViewById<TextView>(R.id.delete_chat).apply {
+                isEnabled = false
+                // Optional: Change text color to indicate disabled state
+                setTextColor(ContextCompat.getColor(context, R.color.redDisabled))
+            }
         }
     }
 
@@ -249,6 +264,7 @@ class ChatActivity : AppCompatActivity() {
 
             ChatState.IN_PROGRESS -> {
                 displayMessage(ChatConstants.PLAYER_NAME, userInput)
+                setLastTimePlayedTimeStampToNow()
                 displayDummyMessage()
                 processUserInputAndDisplayAIMessage(userInput)
             }
@@ -298,12 +314,14 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun displayMessage(author: String, text: String) {
+        val textTrimmed = text.trim()
+
         val newMessage = Message(
             UUID.randomUUID().toString(),
             chatId ?: "-1",
             System.currentTimeMillis(),
             author,
-            text
+            textTrimmed
         )
         adapter.addMessage(newMessage)
 
@@ -392,12 +410,6 @@ class ChatActivity : AppCompatActivity() {
         AITextDungeon.database.messageDao().deleteMessagesForChat(chatId.toString())
         chatId = null
         finish()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        setLastTimePlayedTimeStampToNow()
     }
 
     private fun setLastTimePlayedTimeStampToNow() {

@@ -39,6 +39,9 @@ class ChatCardAdapter(
         holder.titleView.text = item.title
         holder.createdOnView.text = "Created on: " + formatDate(item.creationTimeStamp)
         holder.lastPlayedView.text = "Last played: " + formatDate(item.lastPlayedTimeStamp)
+        if (item.coverImage != "tbd") {
+            holder.imageView.setImageResource(R.drawable.default_thumbnail)
+        }
     }
 
     private fun formatDate(timestamp: Long): String {

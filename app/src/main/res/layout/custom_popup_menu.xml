@@ -45,6 +45,6 @@
         android:layout_height="wrap_content"
         android:text="Delete Chat"
         android:padding="16dp"
-        android:textColor="#FF4229"
+        android:textColor="@color/textRed"
         android:fontFamily="@font/jet_brains_mono_medium" />
 </LinearLayout>
