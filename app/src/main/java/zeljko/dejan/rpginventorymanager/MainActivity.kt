@@ -43,14 +43,14 @@ class MainActivity : AppCompatActivity() {
         "Heroes Wanted: AI-ply Within!",
         "Welcome to a Land of AI-nchantment.",
         "Where the AI-mprobable Becomes Reality.",
-        "Your AI-ga Written by You.",
+        "AI-venture Awaits. Will You Answer?",
         "The AI-dyssey is Yours.",
         "Let AI Unfold Your Fantasy.",
         "An AI-pic Awaits Its Hero.",
         "AI, Dream, Explore.",
         "AI Journey Unlike Any Other.",
         "Chart Your AI-course.",
-        "Land of What-AI-fs.",
+        "D-AI-vid Kupert Approves.",
         "Your AI-venture, Your Rules.",
         "Mythical BeAI-sts and Where to Find Them.",
         "The Ultimate AI-Playground.",
@@ -74,6 +74,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val subtitleHeader = findViewById<android.widget.TextView>(R.id.headerSubtitle)
+        subtitleHeader.text = randomSubtitleTexts.random()
+    }
+
+    override fun onResume() {
+        super.onResume()
         val subtitleHeader = findViewById<android.widget.TextView>(R.id.headerSubtitle)
         subtitleHeader.text = randomSubtitleTexts.random()
     }
