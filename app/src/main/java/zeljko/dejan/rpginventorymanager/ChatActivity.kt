@@ -284,6 +284,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun createNewChatInDatabaseAndDisplayIntroMessage() {
+        disableTextFieldAndSendButton()
         CoroutineScope(Dispatchers.Main).launch {
             val threadId = ChatService.callCreateChatService(currentTitle, currentDescription)
             threadId?.let {
@@ -300,6 +301,7 @@ class ChatActivity : AppCompatActivity() {
                 chatId = newChat.id
 
                 displayIntroMessage()
+                enableTextFieldAndSendButton()
             } ?: run {
                 throw Exception("Failed to create chat")
                 // TODO: Send message and retry button to user
@@ -382,12 +384,14 @@ class ChatActivity : AppCompatActivity() {
 
     private fun processUserInputAndDisplayAIMessage(input: String) {
         val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
+        disableTextFieldAndSendButton()
         CoroutineScope(Dispatchers.Main).launch {
             val message = ChatService.callSendMessageAndGetResponse(threadId, input)
             message?.let {
                 updateLastAIMessageText(
                     message
                 )
+                enableTextFieldAndSendButton()
             } ?: run {
                 throw Exception("Failed to get message")
             }
@@ -417,6 +421,22 @@ class ChatActivity : AppCompatActivity() {
             chat.lastPlayedTimeStamp = lastPlayedTimeStamp
             AITextDungeon.database.chatDao().updateChat(chat)
         }
+    }
+
+    private fun disableTextFieldAndSendButton() {
+        val inputField = findViewById<EditText>(R.id.inputMessage)
+        val sendButton = findViewById<ImageButton>(R.id.sendButton)
+
+        inputField.isEnabled = false
+        sendButton.isEnabled = false
+    }
+
+    private fun enableTextFieldAndSendButton() {
+        val inputField = findViewById<EditText>(R.id.inputMessage)
+        val sendButton = findViewById<ImageButton>(R.id.sendButton)
+
+        inputField.isEnabled = true
+        sendButton.isEnabled = true
     }
 }
 
