@@ -86,13 +86,11 @@ class ChatActivity : AppCompatActivity() {
         } else {
             popupView.findViewById<TextView>(R.id.rename_chat).apply {
                 isEnabled = false
-                // Optional: Change text color to indicate disabled state
                 setTextColor(ContextCompat.getColor(context, R.color.neutralColorDisabled))
             }
 
             popupView.findViewById<TextView>(R.id.delete_chat).apply {
                 isEnabled = false
-                // Optional: Change text color to indicate disabled state
                 setTextColor(ContextCompat.getColor(context, R.color.redDisabled))
             }
         }

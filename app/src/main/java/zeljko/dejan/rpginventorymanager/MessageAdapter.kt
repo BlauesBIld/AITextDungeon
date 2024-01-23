@@ -118,6 +118,8 @@ class MessageAdapter(private val messages: MutableList<Message>) :
                 )
                 authorTextView.text = ChatActivity.ChatConstants.AI_NAME
             } else {
+                messageTextView.visibility = View.VISIBLE
+                previewMessageTextView.visibility = View.GONE
                 authorTextView.setTextColor(
                     ContextCompat.getColor(
                         view.context,
