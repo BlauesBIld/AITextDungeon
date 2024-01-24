@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import zeljko.dejan.rpginventorymanager.database.Chat
 import zeljko.dejan.rpginventorymanager.database.Message
@@ -28,6 +29,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var menuButton: ImageButton
 
     private var chatState = ChatState.AWAITING_DESCRIPTION
+    private var chatServiceState: ChatServiceState? = null
     private var chatId: String? = null
 
     private var currentDescription: String = ""
@@ -53,8 +55,8 @@ class ChatActivity : AppCompatActivity() {
         val menuButton = findViewById<ImageButton>(R.id.menuButton)
         menuButton.setOnClickListener { showPopupMenu(it) }
 
+        setupMessageInputListenerAndSendButtonIcon()
         initializeMessages()
-        setupMessageInputListener()
         setupKeyboardVisibilityListener()
     }
 
@@ -105,6 +107,12 @@ class ChatActivity : AppCompatActivity() {
             .create()
 
         dialog.show()
+
+        val messageView = dialog.findViewById<TextView>(android.R.id.message)
+        messageView?.setTextColor(ContextCompat.getColor(this, R.color.white))
+
+        val deleteButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        deleteButton.setTextColor(ContextCompat.getColor(this, R.color.textRed))
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             callDeleteChatService()
@@ -167,14 +175,104 @@ class ChatActivity : AppCompatActivity() {
 
         adapter = MessageAdapter(messages)
         messagesRecyclerView.adapter = adapter
+
+        handleCurrentChatServiceState()
+
         messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
     }
+
+    private fun handleCurrentChatServiceState() {
+        when (chatServiceState) {
+            ChatServiceState.WAITING_FOR_USER_INPUT -> {
+                enableTextFieldAndSendButton()
+            }
+
+            ChatServiceState.WAITING_FOR_RESPONSE -> {
+                disableTextFieldAndSendButton()
+                displayDummyMessage()
+                checkEverySecondIfDatabaseEntryIsUpdated()
+            }
+
+            ChatServiceState.ERROR_CREATING_CHAT -> {
+                disableTextFieldAndSendButton()
+                displayDummyMessage()
+                updateLastAIMessageText("Failed to get response from server")
+                setSendButtonToRetryAndSetOnclickListenerToCallCreateChatService()
+            }
+
+            ChatServiceState.ERROR_GETTING_NEXT_MESSAGE -> {
+                val lastUserText = AITextDungeon.database.messageDao()
+                    .getMessagesByAuthor(chatId.toString(), ChatConstants.PLAYER_NAME)
+                    .lastOrNull()?.text ?: ""
+
+                disableTextFieldAndSendButton()
+                displayDummyMessage()
+                updateLastAIMessageText("Failed to get response from server")
+                setSendButtonToRetryAndSetOnclickListenerToCallGetNextMessage(lastUserText)
+            }
+
+            else -> {}
+        }
+    }
+
+    private fun checkEverySecondIfDatabaseEntryIsUpdated() {
+        CoroutineScope(Dispatchers.Main).launch {
+            var currentChatServiceState = ChatServiceState.WAITING_FOR_RESPONSE
+
+            while (currentChatServiceState == ChatServiceState.WAITING_FOR_RESPONSE) {
+                val chat = AITextDungeon.database.chatDao().getChatById(chatId.toString())
+                currentChatServiceState = chat.chatServiceState
+                delay(1000)
+            }
+
+            Log.i(
+                "ChatActivity",
+                "checkEverySecondIfDatabaseEntryIsUpdated: " + currentChatServiceState
+            )
+
+            when (currentChatServiceState) {
+                ChatServiceState.WAITING_FOR_USER_INPUT -> {
+                    enableTextFieldAndSendButton()
+                    val lastMessage = AITextDungeon.database.messageDao()
+                        .getMessagesByAuthor(chatId.toString(), ChatConstants.AI_NAME)
+                        .lastOrNull()
+                    updateLastAIMessageText(
+                        lastMessage?.text ?: "Failed to get response from server"
+                    )
+                }
+
+                ChatServiceState.ERROR_CREATING_CHAT -> {
+                    disableTextFieldAndSendButton()
+                    displayDummyMessage()
+                    updateLastAIMessageText("Failed to get response from server")
+                    setSendButtonToRetryAndSetOnclickListenerToCallCreateChatService()
+                }
+
+                ChatServiceState.ERROR_GETTING_NEXT_MESSAGE -> {
+                    val lastUserText = AITextDungeon.database.messageDao()
+                        .getMessagesByAuthor(chatId.toString(), ChatConstants.PLAYER_NAME)
+                        .lastOrNull()?.text ?: ""
+
+                    disableTextFieldAndSendButton()
+                    displayDummyMessage()
+                    updateLastAIMessageText("Failed to get response from server")
+                    setSendButtonToRetryAndSetOnclickListenerToCallGetNextMessage(lastUserText)
+                }
+
+
+                else -> {}
+            }
+        }
+    }
+
 
     private fun loadChatInformationAndMessagesFromDatabase(messages: MutableList<Message>) {
         val chat = AITextDungeon.database.chatDao().getChatById(chatId.toString())
         currentTitle = chat.title
         currentDescription = chat.description
         currentChatTitleTextView.text = currentTitle
+
+        chatServiceState = chat.chatServiceState
 
         messages.add(
             Message(
@@ -218,10 +316,11 @@ class ChatActivity : AppCompatActivity() {
         )
     }
 
-    private fun setupMessageInputListener() {
+    private fun setupMessageInputListenerAndSendButtonIcon() {
         val inputField = findViewById<EditText>(R.id.inputMessage)
         val sendButton = findViewById<ImageButton>(R.id.sendButton)
 
+        sendButton.setImageResource(R.drawable.ic_send)
         sendButton.setOnClickListener {
             val userInput = inputField.text.toString()
             if (!userInput.isEmpty()) {
@@ -269,20 +368,6 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayIntroMessage() {
-        val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
-        CoroutineScope(Dispatchers.Main).launch {
-            val message = ChatService.callGetNextMessage(threadId)
-            message?.let {
-                updateLastAIMessageText(
-                    message
-                )
-            } ?: run {
-                throw Exception("Failed to get initial story message")
-            }
-        }
-    }
-
     private fun createNewChatInDatabaseAndDisplayIntroMessage() {
         disableTextFieldAndSendButton()
         CoroutineScope(Dispatchers.Main).launch {
@@ -296,6 +381,7 @@ class ChatActivity : AppCompatActivity() {
                     "tbd",
                     System.currentTimeMillis(),
                     System.currentTimeMillis(),
+                    ChatServiceState.WAITING_FOR_RESPONSE
                 )
                 AITextDungeon.database.chatDao().insertChat(newChat)
                 chatId = newChat.id
@@ -303,8 +389,31 @@ class ChatActivity : AppCompatActivity() {
                 displayIntroMessage()
                 enableTextFieldAndSendButton()
             } ?: run {
-                throw Exception("Failed to create chat")
-                // TODO: Send message and retry button to user
+                setChatServiceState(ChatServiceState.ERROR_CREATING_CHAT)
+                setSendButtonToRetryAndSetOnclickListenerToCallCreateChatService()
+                updateLastAIMessageText("Failed to get response from server")
+            }
+        }
+    }
+
+    private fun displayIntroMessage() {
+        val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
+        CoroutineScope(Dispatchers.Main).launch {
+            setChatServiceState(ChatServiceState.WAITING_FOR_RESPONSE)
+            val message = ChatService.callGetNextMessage(threadId)
+            message?.let {
+                val messageEntity = updateLastAIMessageText(
+                    message
+                )
+
+                if (chatId != null && chatServiceState != ChatServiceState.ERROR_CREATING_CHAT && chatServiceState != ChatServiceState.ERROR_CREATING_CHAT) {
+                    AITextDungeon.database.messageDao().insertMessage(messageEntity)
+                }
+                setChatServiceState(ChatServiceState.WAITING_FOR_USER_INPUT)
+            } ?: run {
+                setChatServiceState(ChatServiceState.ERROR_GETTING_NEXT_MESSAGE)
+                setSendButtonToRetryAndSetOnclickListenerToCallGetNextMessage(threadId)
+                updateLastAIMessageText("Failed to get response from server")
             }
         }
     }
@@ -345,7 +454,7 @@ class ChatActivity : AppCompatActivity() {
         messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 
-    private fun updateLastAIMessageText(text: String) {
+    private fun updateLastAIMessageText(text: String): Message {
         val newMessage = Message(
             UUID.randomUUID().toString(),
             chatId ?: "-1",
@@ -355,11 +464,9 @@ class ChatActivity : AppCompatActivity() {
         )
         adapter.updateLastAIMessage(newMessage)
 
-        if (chatId != null) {
-            AITextDungeon.database.messageDao().insertMessage(newMessage)
-        }
-
         messagesRecyclerView.scrollToPosition(adapter.itemCount - 1)
+
+        return newMessage
     }
 
     private fun setupKeyboardVisibilityListener() {
@@ -384,17 +491,54 @@ class ChatActivity : AppCompatActivity() {
 
     private fun processUserInputAndDisplayAIMessage(input: String) {
         val threadId = AITextDungeon.database.chatDao().getChatById(chatId.toString()).threadId
-        disableTextFieldAndSendButton()
         CoroutineScope(Dispatchers.Main).launch {
+            setChatServiceState(ChatServiceState.WAITING_FOR_RESPONSE)
+            disableTextFieldAndSendButton()
             val message = ChatService.callSendMessageAndGetResponse(threadId, input)
             message?.let {
-                updateLastAIMessageText(
+                val messageEntity = updateLastAIMessageText(
                     message
                 )
+
+                AITextDungeon.database.messageDao().insertMessage(messageEntity)
+
                 enableTextFieldAndSendButton()
+                setChatServiceState(ChatServiceState.WAITING_FOR_USER_INPUT)
             } ?: run {
-                throw Exception("Failed to get message")
+                setChatServiceState(ChatServiceState.ERROR_GETTING_NEXT_MESSAGE)
+                setSendButtonToRetryAndSetOnclickListenerToCallGetNextMessage(input)
+                updateLastAIMessageText("Failed to get response from server")
             }
+        }
+    }
+
+    private fun setChatServiceState(newChatServiceState: ChatServiceState) {
+        chatServiceState = newChatServiceState
+        val chat = AITextDungeon.database.chatDao().getChatById(chatId.toString())
+        chat.chatServiceState = newChatServiceState
+        AITextDungeon.database.chatDao().updateChat(chat)
+    }
+
+    private fun setSendButtonToRetryAndSetOnclickListenerToCallGetNextMessage(input: String) {
+        val sendButton = findViewById<ImageButton>(R.id.sendButton)
+        sendButton.isEnabled = true
+        sendButton.setImageResource(R.drawable.ic_retry)
+        sendButton.setOnClickListener {
+            setupMessageInputListenerAndSendButtonIcon()
+            updateLastAIMessageText("")
+            processUserInputAndDisplayAIMessage(input)
+        }
+    }
+
+
+    private fun setSendButtonToRetryAndSetOnclickListenerToCallCreateChatService() {
+        val sendButton = findViewById<ImageButton>(R.id.sendButton)
+        sendButton.isEnabled = true
+        sendButton.setImageResource(R.drawable.ic_retry)
+        sendButton.setOnClickListener {
+            setupMessageInputListenerAndSendButtonIcon()
+            updateLastAIMessageText("")
+            createNewChatInDatabaseAndDisplayIntroMessage()
         }
     }
 
@@ -439,4 +583,3 @@ class ChatActivity : AppCompatActivity() {
         sendButton.isEnabled = true
     }
 }
-
