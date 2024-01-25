@@ -14,14 +14,14 @@
 
     <TextView
         android:id="@+id/headerTitle"
-        android:layout_width="230dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
+        android:maxLines="2"
         android:text="@string/ai_text_dungeon"
         android:textColor="@color/white"
         android:textSize="52sp"
-        android:maxLines="2"
-        android:layout_marginBottom="16dp"
         app:fontFamily="@font/jet_brains_mono_bold" />
 
     <TextView
