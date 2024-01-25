@@ -335,7 +335,10 @@ class ChatActivity : AppCompatActivity() {
             ChatState.AWAITING_DESCRIPTION -> {
                 currentDescription = userInput
                 displayMessage(ChatConstants.PLAYER_NAME, userInput)
-                displayMessage(ChatConstants.AI_NAME, "Please enter a title for your adventure.")
+                displayMessage(
+                    ChatConstants.AI_NAME,
+                    "Please enter a title for your adventure. (max. 20 characters, only letters, numbers, spaces, and punctuation)"
+                )
                 chatState = ChatState.AWAITING_TITLE
             }
 
