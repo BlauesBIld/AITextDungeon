@@ -137,11 +137,11 @@ class ChatActivity : AppCompatActivity() {
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val newChatName = editTextChatName.text.toString().trim()
-            if (newChatName.isNotEmpty()) {
+            if (newChatName.isNotEmpty() && isValidTitle(newChatName)) {
                 renameChat(newChatName)
                 dialog.dismiss()
             } else {
-                editTextChatName.error = "Name cannot be empty"
+                editTextChatName.error = "Please enter a valid chat name!"
             }
         }
     }
@@ -354,7 +354,7 @@ class ChatActivity : AppCompatActivity() {
                 } else {
                     displayMessage(
                         ChatConstants.AI_NAME,
-                        "Please enter a valid title (max 40 characters, only letters, numbers, spaces, and punctuation)."
+                        "Please enter a valid title (max 20 characters, only letters, numbers, spaces, and punctuation)."
                     )
                 }
             }
@@ -419,7 +419,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun isValidTitle(title: String): Boolean {
-        return title.length <= 40 && title.matches(Regex("[A-Za-z0-9 .,?!]+"))
+        return title.length <= 20 && title.matches(Regex("[A-Za-z0-9 .,?!]+"))
     }
 
     private fun displayMessage(author: String, text: String) {
