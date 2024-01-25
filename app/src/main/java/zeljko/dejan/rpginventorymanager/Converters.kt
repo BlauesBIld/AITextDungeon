@@ -26,5 +26,15 @@ class Converters {
     fun fromMutableSet(set: MutableSet<String>): String {
         return Gson().toJson(set)
     }
+
+    @TypeConverter
+    fun fromChatServiceState(state: ChatServiceState): String {
+        return state.name
+    }
+
+    @TypeConverter
+    fun toChatServiceState(value: String): ChatServiceState {
+        return ChatServiceState.valueOf(value)
+    }
 }
 
